@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
 import { ProductImage } from '@/components/ProductImage';
 import { StockBadge } from '@/components/Badge';
+import { ClientExclusions } from './ClientExclusions';
 import { PhotoManager, type Photo } from './PhotoManager';
 import { Switch } from './VisibilitySwitch';
 import {
@@ -58,12 +59,16 @@ export function ProductForm({
   photos,
   brands: initialBrands,
   categories: initialCategories,
+  clients,
+  excluded,
 }: {
   id: string | null;
   initial: ProductValues;
   photos: Photo[];
   brands: { id: string; name: string }[];
   categories: { id: string; label: string }[];
+  clients: { id: string; name: string }[];
+  excluded: string[];
 }) {
   const [v, setV] = useState(initial);
   const [brands, setBrands] = useState(initialBrands);
@@ -306,6 +311,8 @@ export function ProductForm({
               />
               {v.is_visible && <input type="hidden" name="is_visible" value="on" />}
             </section>
+
+            <ClientExclusions clients={clients} initial={excluded} active={v.is_visible} />
 
             <section className="flex flex-col gap-3 rounded-block border border-border bg-white p-5">
               <h2 className="text-[16px] leading-[22px] font-semibold">Photos</h2>

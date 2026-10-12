@@ -248,6 +248,26 @@ select is((select m -> 'top_stores' -> 0 ->> 'orders' from st)::int, 2, 'magasin
 select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
 select throws_ok($q$select admin_stats('month')$q$, 'P0001', 'forbidden', 'statistiques réservées à l''admin');
 
+-- Visibilité par client
+reset role;
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select set_product_exclusions((select p1 from ids), array[(select id from companies where siret = '11111111111119')]);
+select is((select count(*) from product_exclusions)::int, 1, 'exclusion enregistrée par l''admin');
+select is((select count(*) from products where reference = 'T-AN-100')::int, 1, 'l''admin voit toujours le produit exclu');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from products where reference = 'T-AN-100')::int, 0, 'produit invisible pour le client exclu');
+select is((select count(*) from product_exclusions)::int, 0, 'le client ne lit pas les exclusions');
+select is(pg_temp.sql_state_msg(format($q$select place_order(%L, null, '[{"product_id":"%s","quantity":1}]')$q$,
+  (select id from stores where company_id = my_company_id() and archived_at is null limit 1), (select p1 from ids))),
+  'insufficient_stock', 'commande refusée sur un produit exclu');
+select is(pg_temp.sql_state_msg(format($q$select set_product_exclusions(%L, '{}')$q$, (select p1 from ids))),
+  'forbidden', 'le client ne modifie pas les exclusions');
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select set_product_exclusions((select p1 from ids), '{}');
+select is((select count(*) from product_exclusions)::int, 0, 'exclusions retirées');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from products where reference = 'T-AN-100')::int, 1, 'produit de nouveau visible');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

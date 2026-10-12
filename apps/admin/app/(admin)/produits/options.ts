@@ -16,3 +16,13 @@ export async function loadOptions(supabase: SupabaseClient<Database>) {
     }),
   };
 }
+
+/** Clients pouvant se voir masquer un produit (comptes actifs ou suspendus). */
+export async function loadClients(supabase: SupabaseClient<Database>) {
+  const { data } = await supabase
+    .from('companies')
+    .select('id, legal_name')
+    .in('status', ['active', 'suspended'])
+    .order('legal_name');
+  return (data ?? []).map((c) => ({ id: c.id, name: c.legal_name }));
+}

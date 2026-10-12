@@ -74,6 +74,12 @@ export async function saveProduct(
     }
     return { formError: 'L’enregistrement a échoué. Réessayez.' };
   }
+  const { error: exclError } = await supabase.rpc('set_product_exclusions', {
+    p_product: data.id,
+    p_companies: form.getAll('excluded').map(String),
+  });
+  if (exclError)
+    return { formError: 'Produit enregistré, mais la liste des clients exclus a échoué.' };
   revalidatePath('/produits');
   if (!id) redirect(`/produits/${data.id}`);
   return { saved: true };

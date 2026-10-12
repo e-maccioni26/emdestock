@@ -193,6 +193,26 @@ test.describe('produits', () => {
     await expect(page.getByText('Produit E2E modifié')).toHaveCount(0);
   });
 
+  test('visibilité par client : exclure puis rétablir', async ({ page }) => {
+    await page.goto('/produits');
+    await page.getByRole('row').filter({ hasText: 'Ambre Nocturne' }).locator('a').first().click();
+    const box = page.getByRole('checkbox', { name: 'Parfumerie Wilson' });
+    await expect(page.getByText('Aucun client exclu.')).toBeVisible();
+    await page.getByLabel('Rechercher un client').fill('wilson');
+    await box.check();
+    await page.getByLabel('Rechercher un client').fill('');
+    await expect(page.getByText('Masqué pour 1 client.')).toBeVisible();
+    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await expect(page.getByText('Enregistré')).toBeVisible();
+    await page.reload();
+    await expect(box).toBeChecked();
+    await box.uncheck();
+    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await expect(page.getByText('Enregistré')).toBeVisible();
+    await page.reload();
+    await expect(box).not.toBeChecked();
+  });
+
   test('création d’une marque depuis la fiche produit', async ({ page }) => {
     await page.goto('/produits/nouveau');
     page.once('dialog', (d) => d.accept(`Marque E2E ${Date.now() % 100000}`));
@@ -255,10 +275,12 @@ test.describe('clients', () => {
     await expect(page.getByRole('button', { name: 'Suspendre l’accès' })).toBeVisible();
 
     const former = page.getByRole('checkbox', { name: 'Ancien client' });
-    await former.check();
+    // l'enregistrement est une action serveur : attendre sa réponse avant de recharger
+    const saved = () => page.waitForResponse((r) => r.request().method() === 'POST');
+    await Promise.all([saved(), former.check()]);
     await page.reload();
     await expect(former).toBeChecked();
-    await former.uncheck();
+    await Promise.all([saved(), former.uncheck()]);
 
     await page.getByRole('button', { name: 'Modifier', exact: true }).click();
     await page.getByLabel('Téléphone').fill('0102030405');

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { requireAdmin } from '@/lib/auth';
 import { ProductForm } from '../ProductForm';
-import { loadOptions } from '../options';
+import { loadClients, loadOptions } from '../options';
 
 export default async function ModifierProduit({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -12,7 +12,11 @@ export default async function ModifierProduit({ params }: { params: Promise<{ id
     .eq('id', id)
     .maybeSingle();
   if (!p) notFound();
-  const { brands, categories } = await loadOptions(supabase);
+  const [{ brands, categories }, clients, { data: excl }] = await Promise.all([
+    loadOptions(supabase),
+    loadClients(supabase),
+    supabase.from('product_exclusions').select('company_id').eq('product_id', id),
+  ]);
   const photos = [...p.product_images].sort((a, b) => a.position - b.position);
   return (
     <ProductForm
@@ -20,6 +24,8 @@ export default async function ModifierProduit({ params }: { params: Promise<{ id
       photos={photos}
       brands={brands}
       categories={categories}
+      clients={clients}
+      excluded={(excl ?? []).map((e) => e.company_id)}
       initial={{
         title: p.title,
         brand_id: p.brand_id ?? '',

@@ -237,6 +237,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"product_exclusions": {
+                  Row: {
+                    "company_id": string,"product_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "company_id": string,"product_id": string
+                  }
+                  Update: {
+                    "company_id"?: string,"product_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_exclusions_company_id_fkey"
+      columns: ["company_id"]
+isOneToOne: false
+      referencedRelation: "companies"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_exclusions_product_id_fkey"
+      columns: ["product_id"]
+isOneToOne: false
+      referencedRelation: "products"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"product_images": {
                   Row: {
                     "created_at": string,"id": string,"path": string,"position": number,"product_id": string,"thumb_path": string | null
@@ -418,6 +444,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"product_hidden_for_me":
+{ Args: { "p_product": string }; Returns: boolean
+                           },
 "register_company":
 { Args: { "p_address": string,"p_city": string,"p_first_name": string,"p_last_name": string,"p_legal_name": string,"p_phone": string,"p_postal_code": string,"p_siret": string }; Returns: string
                            },
@@ -454,6 +483,9 @@ isOneToOne: false
         isOneToOne: true
         isSetofReturn: false
       } },
+"set_product_exclusions":
+{ Args: { "p_companies": (string)[],"p_product": string }; Returns: undefined
+                           },
 "show_limit":
 { Args: Record<PropertyKey, never>; Returns: number
                            },
