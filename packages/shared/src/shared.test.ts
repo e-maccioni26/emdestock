@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+  SIRET_ALREADY_REGISTERED,
+  accessState,
+  isValidSiret,
+  normalizeSiret,
+  registerErrorMessage,
+  validatePassword,
   clampQuantity,
   formatEuro,
   formatOrderNumber,
@@ -86,5 +92,28 @@ describe('ProductImage', () => {
         url,
       ),
     ).toContain('c.jpg');
+  });
+});
+
+describe('auth', () => {
+  it('mot de passe', () => {
+    expect(validatePassword('court1')).not.toBeNull();
+    expect(validatePassword('sansaucunchiffre')).not.toBeNull();
+    expect(validatePassword('douzecaracteres1')).toBeNull();
+  });
+  it('SIRET (Luhn + La Poste)', () => {
+    expect(isValidSiret('909 639 668 00013')).toBe(true); // exemple des maquettes
+    expect(isValidSiret('12345678901234')).toBe(false);
+    expect(isValidSiret('35600000000048')).toBe(true); // La Poste
+    expect(isValidSiret('73282932000074')).toBe(true);
+    expect(isValidSiret('1234')).toBe(false);
+    expect(normalizeSiret('732 829 320 00074')).toBe('73282932000074');
+  });
+  it('erreurs et accès', () => {
+    expect(registerErrorMessage({ code: '23505' })).toBe(SIRET_ALREADY_REGISTERED);
+    expect(accessState({ role: 'client', company_status: 'active' })).toBe('active');
+    expect(accessState({ role: 'client', company_status: 'refused' })).toBe('pending');
+    expect(accessState({ role: 'client', company_status: 'suspended' })).toBe('suspended');
+    expect(accessState({ role: 'admin', company_status: null })).toBe('blocked');
   });
 });

@@ -124,6 +124,15 @@ select is((admin_stats('month') -> 'current' ->> 'orders')::int, (select month_o
 select is(jsonb_array_length(admin_stats('week') -> 'series'), 7, '7 jours');
 select is(jsonb_array_length(admin_stats('year') -> 'series'), 12, '12 mois');
 
+-- Webhooks e-mail : une URL invalide ne bloque jamais le changement de statut ; app_settings illisible côté client
+reset role;
+update app_settings set value = '::pas-une-url' where key = 'notify_url';
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select lives_ok(format($q$select set_company_status(%L, 'suspended')$q$, (select id from companies where siret = '11111111111119')),
+  'e-mail raté : le statut change quand même');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select throws_ok($q$select * from app_settings$q$, '42501', null, 'app_settings illisible pour un client');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

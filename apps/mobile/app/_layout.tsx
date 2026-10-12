@@ -3,8 +3,39 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SessionProvider, useSession } from '@/lib/session';
 
 SplashScreen.preventAutoHideAsync();
+
+function Routes() {
+  const { ready, access } = useSession();
+  if (!ready) return null;
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={access === null}>
+        <Stack.Screen name="connexion" />
+        <Stack.Screen name="inscription" />
+        <Stack.Screen name="mot-de-passe-oublie" />
+      </Stack.Protected>
+      {/* Connecté sans demande (inscription interrompue) : reprise du formulaire. */}
+      <Stack.Protected guard={access === 'none'}>
+        <Stack.Screen name="inscription-a-terminer" />
+      </Stack.Protected>
+      <Stack.Protected guard={access === 'pending'}>
+        <Stack.Screen name="en-attente" />
+      </Stack.Protected>
+      <Stack.Protected guard={access === 'suspended'}>
+        <Stack.Screen name="acces-suspendu" />
+      </Stack.Protected>
+      <Stack.Protected guard={access === 'active'}>
+        <Stack.Screen name="index" />
+      </Stack.Protected>
+      {/* Lien e-mail de récupération : accessible connecté ou non. */}
+      <Stack.Screen name="nouveau-mot-de-passe" />
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -21,9 +52,11 @@ export default function RootLayout() {
 
   if (!loaded && !error) return null;
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }} />
-    </>
+      <SessionProvider>
+        <Routes />
+      </SessionProvider>
+    </SafeAreaProvider>
   );
 }

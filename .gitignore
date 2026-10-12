@@ -8,3 +8,5 @@ dist
 supabase/.branches
 supabase/.temp
 .DS_Store
+
+supabase/functions/.env

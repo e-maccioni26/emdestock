@@ -129,3 +129,8 @@ insert into banners (id, eyebrow, title, cta_label, theme, target_type, target_i
   ('f0000000-0000-0000-0000-000000000004', 'Fêtes de fin d''année', 'Coffrets cadeaux : précommandes ouvertes', 'Découvrir', 'encre', 'category', 'c0000000-0000-0000-0000-000000000004', 'all', now() + interval '20 days', now() + interval '73 days', 4);
 insert into banner_products (banner_id, product_id)
 select 'f0000000-0000-0000-0000-000000000002', id from products where reference in ('BP-CMI-075', 'BP-LCN-200', 'BP-BLV-015');
+
+-- Réglages locaux des webhooks e-mail (l'Edge Function est servie par `pnpm functions:serve`).
+insert into app_settings values
+  ('notify_url', 'http://host.docker.internal:54321/functions/v1/notify'),
+  ('notify_secret', 'local-dev-webhook-secret');
