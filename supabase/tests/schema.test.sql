@@ -217,6 +217,37 @@ select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
 select ok((select count(*) from top_ordered_products(5)) >= 1, 'plus commandés : au moins un produit');
 select is((select count(*) from top_ordered_products(5) where product_id = (select p3 from ids))::int, 0, 'produit masqué exclu des plus commandés');
 
+-- Statistiques : calcul sur des commandes datées (2020), fuseau Paris, annulées exclues
+reset role;
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
+insert into orders (id, number, company_id, store_id, status, total_ht, units, created_at) values
+  ('00000000-0000-0000-0000-0000000000d1', 'T-2020-0001', (select id from companies where siret = '11111111111119'), (select store from ids), 'done', 20, 2, '2020-02-29 23:30:00+00'), -- 1er mars 00h30 à Paris
+  ('00000000-0000-0000-0000-0000000000d2', 'T-2020-0002', (select id from companies where siret = '11111111111119'), (select store from ids), 'received', 30, 3, '2020-03-10 10:00:00+00'),
+  ('00000000-0000-0000-0000-0000000000d3', 'T-2020-0003', (select id from companies where siret = '11111111111119'), (select store from ids), 'cancelled', 1000, 100, '2020-03-12 10:00:00+00'),
+  ('00000000-0000-0000-0000-0000000000d4', 'T-2020-0004', (select id from companies where siret = '11111111111119'), (select store from ids), 'done', 50, 5, '2020-02-10 10:00:00+00');
+insert into order_items (order_id, product_id, reference, title, ean, unit_price_ht, quantity, line_total_ht)
+  values ('00000000-0000-0000-0000-0000000000d2', (select p1 from ids), 'T-AN-100', 'Ambre Test 100 ml', '9990000000011', 10, 3, 30);
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+create temp table st as select admin_stats('month', '2020-03-15') as m, admin_stats('week', '2020-03-10') as w, admin_stats('year', '2020-06-01') as y;
+grant select on st to authenticated;
+select is((select m -> 'current' ->> 'orders' from st)::int, 2, 'mois : la commande de 00h30 Paris compte en mars');
+select is((select m -> 'current' ->> 'units' from st)::int, 5, 'mois : unités (annulée exclue)');
+select is((select m -> 'current' ->> 'total_ht' from st)::numeric, 50::numeric, 'mois : montant HT');
+select is((select m -> 'current' ->> 'active_clients' from st)::int, 1, 'mois : clients actifs');
+select is((select m -> 'previous' ->> 'orders' from st)::int, 1, 'mois précédent : février');
+select is((select m -> 'previous' ->> 'total_ht' from st)::numeric, 50::numeric, 'mois précédent : montant');
+select is((select jsonb_array_length(m -> 'series') from st), 6, 'mars 2020 : 6 semaines ISO touchent le mois');
+select is((select (m -> 'series' -> 0 ->> 'orders')::int from st), 1, 'série mois : 1re semaine (borne Paris)');
+select is((select jsonb_array_length(w -> 'series') from st), 7, 'semaine : 7 jours');
+select is((select (w -> 'series' -> 1 ->> 'orders')::int from st), 1, 'semaine : mardi 10 mars');
+select is((select jsonb_array_length(y -> 'series') from st), 12, 'année : 12 mois');
+select is((select (y -> 'series' -> 1 ->> 'orders')::int from st), 1, 'année : février');
+select is((select (y -> 'series' -> 2 ->> 'orders')::int from st), 2, 'année : mars');
+select is((select m -> 'top_products' -> 0 ->> 'units' from st)::int, 3, 'produit le plus commandé');
+select is((select m -> 'top_stores' -> 0 ->> 'orders' from st)::int, 2, 'magasin le plus actif');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select throws_ok($q$select admin_stats('month')$q$, 'P0001', 'forbidden', 'statistiques réservées à l''admin');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

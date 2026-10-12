@@ -21,7 +21,7 @@ export async function signIn(_prev: LoginState, form: FormData): Promise<LoginSt
     await supabase.auth.signOut();
     return { error: 'Ce compte n’a pas accès au back-office.' };
   }
-  redirect('/clients');
+  redirect('/');
 }
 
 export async function signOut() {

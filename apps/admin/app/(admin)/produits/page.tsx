@@ -81,7 +81,7 @@ export default async function Produits({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border px-8">
+      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
             Produits &amp; stocks

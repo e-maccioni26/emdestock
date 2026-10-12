@@ -65,7 +65,7 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border px-8">
+      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           <Link
             href="/clients?tab=actifs"

@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   bannerStatus,
+  bucketLabel,
+  deltaTone,
+  formatDelta,
+  formatRelative,
+  isoWeek,
+  percentChange,
+  periodLabel,
   exceedsActiveLimit,
   maxConcurrent,
   parisMidnight,
@@ -161,5 +168,38 @@ describe('encarts', () => {
     expect(parisMidnight('2026-07-14').toISOString()).toBe('2026-07-13T22:00:00.000Z');
     expect(parisMidnight('2026-12-25').toISOString()).toBe('2026-12-24T23:00:00.000Z');
     expect(toParisDate('2026-07-13T22:30:00Z')).toBe('2026-07-14');
+  });
+});
+
+describe('statistiques', () => {
+  it('évolution', () => {
+    expect(percentChange(112, 100)).toBe(12);
+    expect(percentChange(90, 100)).toBe(-10);
+    expect(percentChange(5, 0)).toBeNull();
+    expect(formatDelta(12)).toBe('+12 %');
+    expect(formatDelta(-10)).toBe('−10 %');
+    expect(formatDelta(0)).toBe('0 %');
+    expect(formatDelta(null)).toBe('—');
+    expect(formatDelta(5, '')).toBe('+5');
+    expect(deltaTone(-1)).toBe('down');
+  });
+  it('semaines ISO et étiquettes', () => {
+    expect(isoWeek('2026-09-28')).toBe(40);
+    expect(isoWeek('2026-01-01')).toBe(1);
+    expect(isoWeek('2021-01-03')).toBe(53);
+    expect(bucketLabel('week', '2026-09-28')).toBe('Lun');
+    expect(bucketLabel('month', '2026-09-28')).toBe('S40');
+    expect(bucketLabel('year', '2026-02-01')).toBe('Fév');
+    expect(periodLabel('month', '2026-09-01')).toBe('Septembre 2026, par semaine');
+    expect(periodLabel('year', '2026-01-01')).toBe('2026, par mois');
+    expect(periodLabel('week', '2026-09-28')).toBe('Semaine du 28 sept., par jour');
+  });
+  it('temps relatif', () => {
+    const now = new Date('2026-10-01T10:00:00Z');
+    expect(formatRelative('2026-10-01T09:55:00Z', now)).toBe('il y a 5 min');
+    expect(formatRelative('2026-10-01T07:00:00Z', now)).toBe('il y a 3 h');
+    expect(formatRelative('2026-09-30T08:00:00Z', now)).toBe('hier');
+    expect(formatRelative('2026-09-28T08:00:00Z', now)).toBe('28 sept.');
+    expect(formatRelative('2026-10-01T10:00:00Z', now)).toBe('à l’instant');
   });
 });

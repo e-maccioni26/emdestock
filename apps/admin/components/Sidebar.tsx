@@ -15,7 +15,7 @@ import {
 import { signOut } from '@/app/connexion/actions';
 
 const NAV: { href: string; label: string; icon: LucideIcon; built: boolean }[] = [
-  { href: '/', label: 'Tableau de bord', icon: LayoutDashboard, built: false },
+  { href: '/', label: 'Tableau de bord', icon: LayoutDashboard, built: true },
   { href: '/commandes', label: 'Commandes', icon: Package, built: true },
   { href: '/produits', label: 'Produits & stocks', icon: Tag, built: true },
   { href: '/clients', label: 'Clients', icon: Users, built: true },
@@ -49,7 +49,7 @@ export function Sidebar({
       </div>
       <nav aria-label="Navigation du back-office" className="flex flex-col gap-0.5">
         {NAV.map(({ href, label, icon: Icon, built }) => {
-          const active = built && pathname.startsWith(href);
+          const active = built && (href === '/' ? pathname === '/' : pathname.startsWith(href));
           if (!built) {
             // Lots suivants (docs/PLAN.md) : visible mais inactif.
             return (

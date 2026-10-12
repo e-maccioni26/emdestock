@@ -101,7 +101,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border px-8">
+      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">Commandes</h1>
           <p className="text-[13px] leading-[18px] text-text-secondary">
