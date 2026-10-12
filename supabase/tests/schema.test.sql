@@ -163,6 +163,34 @@ select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
 select lives_ok(format($q$select reorder_product_images(%L, array['00000000-0000-0000-0000-0000000000f2','00000000-0000-0000-0000-0000000000f1']::uuid[])$q$, (select p2 from ids)), 'réordonnancement sans violation');
 select is((select path from product_images where product_id = (select p2 from ids) order by position limit 1), 'b.jpg', 'nouvel ordre appliqué');
 
+-- Magasins : archivés s'ils ont des commandes, supprimés sinon, le dernier reste
+reset role;
+update companies set status = 'active' where siret = '11111111111119';
+insert into stores (id, company_id, name, address, postal_code, city) values
+  ('00000000-0000-0000-0000-0000000000e1', (select id from companies where siret = '11111111111119'), 'Annexe', '2 rue Test', '75002', 'Paris'),
+  ('00000000-0000-0000-0000-0000000000e2', (select id from companies where siret = '11111111111119'), 'Dépôt', '3 rue Test', '75003', 'Paris');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is(remove_store('00000000-0000-0000-0000-0000000000e1'), 'deleted', 'magasin sans commande : supprimé');
+select is(remove_store((select store from ids)), 'archived', 'magasin avec commande : archivé');
+select is((select count(*) from stores where archived_at is null)::int, 1, 'le magasin archivé sort des listes');
+select is(pg_temp.sql_state_msg($q$select remove_store('00000000-0000-0000-0000-0000000000e2')$q$), 'last_store', 'le dernier magasin reste');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c2');
+select is(pg_temp.sql_state_msg($q$select remove_store('00000000-0000-0000-0000-0000000000e2')$q$), 'not_found', 'magasin d''un autre client introuvable');
+
+-- Liste des clients : réservée à l'admin (la RLS vide le résultat pour un client)
+select is((select count(*) from admin_clients('test wilson'))::int, 0, 'client : liste vide');
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is((select count(*) from admin_clients('TEST wilson'))::int, 1, 'admin : recherche raison sociale sans casse');
+select is((select count(*) from admin_clients('111 111 111 11119'))::int, 1, 'admin : recherche SIRET avec espaces');
+select is((select orders from admin_clients('test wilson')), 0, 'commandes annulées exclues du compteur');
+
+-- Garde entreprise : un client ne change pas son statut, le service_role le peut (delete-account)
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select throws_ok($q$update companies set status = 'deleted'$q$, 'P0001', 'forbidden_field', 'client : statut protégé');
+reset role;
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
+select lives_ok($q$update companies set status = 'deleted', phone = null where siret = '11111111111119'$q$, 'service_role : statut modifiable');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

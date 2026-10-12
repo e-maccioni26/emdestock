@@ -53,3 +53,11 @@ export const formatShortDateTime = (d: Date | string): string =>
 /** « 1 oct. 2026 à 10:42 » (détail, historique). */
 export const formatDateTimeLong = (d: Date | string): string =>
   `${longDateFmt.format(new Date(d))} à ${timeFmt.format(new Date(d))}`;
+
+const dayMonthFmt = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'Europe/Paris',
+});
+/** « 1 oct. », « 28 sept. » (listes compactes). */
+export const formatDayMonth = (d: Date | string): string => dayMonthFmt.format(new Date(d));

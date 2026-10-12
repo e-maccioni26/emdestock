@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  formatDayMonth,
   formatDateTimeLong,
   formatShortDateTime,
   SIRET_ALREADY_REGISTERED,
@@ -32,6 +33,7 @@ describe('formatage', () => {
   it('dates de commande (Europe/Paris)', () => {
     expect(formatShortDateTime('2026-10-01T08:42:00Z')).toBe('01/10 · 10:42');
     expect(formatDateTimeLong('2026-10-01T08:42:00Z')).toBe('1 oct. 2026 à 10:42');
+    expect(formatDayMonth('2026-09-28T08:42:00Z')).toBe('28 sept.');
   });
   it('SIRET', () => expect(formatSiret('90963966800013')).toBe('909 639 668 00013'));
 });

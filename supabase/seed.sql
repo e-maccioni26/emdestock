@@ -54,13 +54,13 @@ select pg_temp.mk_user('00000000-0000-0000-0000-0000000000e1', 's.cohen@beaute-m
 select pg_temp.mk_user('00000000-0000-0000-0000-0000000000e2', 'contact@parfumsandco.test', 'ClientDemo2026!');
 select pg_temp.mk_user('00000000-0000-0000-0000-0000000000e3', 'emma@atelier-beaute.test', 'ClientDemo2026!');
 
-insert into companies (id, siret, legal_name, address, postal_code, city, status, validated_at, created_at) values
-  ('a0000000-0000-0000-0000-000000000001', '90963966800013', 'Parfumerie Wilson SAS', '113 avenue du Président Wilson', '75116', 'Paris', 'active', now() - interval '120 days', now() - interval '121 days'),
-  ('a0000000-0000-0000-0000-000000000002', '81234567800021', 'Beauté Rivoli SARL', '12 rue de Rivoli', '75001', 'Paris', 'active', now() - interval '90 days', now() - interval '91 days'),
-  ('a0000000-0000-0000-0000-000000000003', '85234567800033', 'Senteurs du Marais', '8 rue des Francs-Bourgeois', '75004', 'Paris', 'active', now() - interval '60 days', now() - interval '61 days'),
-  ('a0000000-0000-0000-0000-000000000011', '91864022500014', 'Beauté Montmartre SAS', '5 rue des Abbesses', '75018', 'Paris', 'pending', null, now() - interval '1 hour'),
-  ('a0000000-0000-0000-0000-000000000012', '88432701900026', 'Parfums & Co Nantes', '14 rue Crébillon', '44000', 'Nantes', 'pending', null, now() - interval '3 hours'),
-  ('a0000000-0000-0000-0000-000000000013', '90275148600018', 'L''Atelier Beauté Lyon', '22 rue de la République', '69002', 'Lyon', 'pending', null, now() - interval '1 day');
+insert into companies (id, siret, legal_name, address, postal_code, city, phone, status, validated_at, created_at) values
+  ('a0000000-0000-0000-0000-000000000001', '90963966800013', 'Parfumerie Wilson SAS', '113 avenue du Président Wilson', '75116', 'Paris', '0140000001', 'active', now() - interval '120 days', now() - interval '121 days'),
+  ('a0000000-0000-0000-0000-000000000002', '81234567800021', 'Beauté Rivoli SARL', '12 rue de Rivoli', '75001', 'Paris', null, 'active', now() - interval '90 days', now() - interval '91 days'),
+  ('a0000000-0000-0000-0000-000000000003', '85234567800033', 'Senteurs du Marais', '8 rue des Francs-Bourgeois', '75004', 'Paris', null, 'active', now() - interval '60 days', now() - interval '61 days'),
+  ('a0000000-0000-0000-0000-000000000011', '91864022500014', 'Beauté Montmartre SAS', '5 rue des Abbesses', '75018', 'Paris', null, 'pending', null, now() - interval '1 hour'),
+  ('a0000000-0000-0000-0000-000000000012', '88432701900026', 'Parfums & Co Nantes', '14 rue Crébillon', '44000', 'Nantes', null, 'pending', null, now() - interval '3 hours'),
+  ('a0000000-0000-0000-0000-000000000013', '90275148600018', 'L''Atelier Beauté Lyon', '22 rue de la République', '69002', 'Lyon', null, 'pending', null, now() - interval '1 day');
 
 insert into profiles (id, company_id, first_name, last_name, email, phone) values
   ('00000000-0000-0000-0000-00000000000c', 'a0000000-0000-0000-0000-000000000001', 'Camille', 'Martin', 'demo-client@emd-destock.test', '0140000001'),

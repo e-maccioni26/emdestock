@@ -329,7 +329,12 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "admin_stats":
+            "admin_clients":
+{ Args: { "p_query"?: string }; Returns: {
+              "contact_name": string,"id": string,"last_order_at": string,"legal_name": string,"orders": number,"siret": string,"status": Database["public"]['Enums']["company_status"],"stores": number,"total_ht": number
+            }[]
+                           },
+"admin_stats":
 { Args: { "p_period": string,"p_ref"?: string }; Returns: Json
                            },
 "catalog_products":
@@ -414,6 +419,9 @@ isOneToOne: false
       } },
 "register_company":
 { Args: { "p_address": string,"p_city": string,"p_first_name": string,"p_last_name": string,"p_legal_name": string,"p_phone": string,"p_postal_code": string,"p_siret": string }; Returns: string
+                           },
+"remove_store":
+{ Args: { "p_store": string }; Returns: string
                            },
 "reorder_product_images":
 { Args: { "p_ids": (string)[],"p_product": string }; Returns: undefined

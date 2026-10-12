@@ -71,6 +71,23 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     };
   }, [refresh]);
 
+  // Statut de l'entreprise en temps réel : une suspension ferme l'accès sans relancer l'app (RLS appliquée au flux).
+  const companyId = profile?.company_id;
+  useEffect(() => {
+    if (!companyId) return;
+    const channel = supabase
+      .channel(`company-${companyId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'companies', filter: `id=eq.${companyId}` },
+        () => refresh(),
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [companyId, refresh]);
+
   const value = useMemo<SessionValue>(
     () => ({
       ready,

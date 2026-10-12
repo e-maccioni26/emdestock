@@ -1,24 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { tokens } from '@emd/shared';
 import { Button } from '@/components/Button';
 import { Field } from '@/components/Field';
 import { Screen } from '@/components/Screen';
 import { Text } from '@/components/Text';
+import { confirmAction } from '@/lib/confirm';
 import { useSession } from '@/lib/session';
 import { useStores } from '@/lib/stores';
 import { supabase } from '@/lib/supabase';
 
-// Feuille modale : ajout d'un magasin (la modification et l'archivage arrivent au lot 4, écran Compte).
+// Feuille modale : ajout (sans paramètre) ou modification d'un magasin. Suppression si aucune commande, sinon archivage (SPEC §2).
 export default function MagasinForm() {
+  const { id } = useLocalSearchParams<{ id?: string }>();
   const { profile } = useSession();
-  const { reload, setActive } = useStores();
+  const { stores, reload, setActive } = useStores();
   const [v, setV] = useState({ name: '', address: '', postal_code: '', city: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string>();
   const [busy, setBusy] = useState(false);
   const set = (k: keyof typeof v) => (t: string) => setV((p) => ({ ...p, [k]: t }));
+
+  useEffect(() => {
+    const s = stores.find((x) => x.id === id);
+    if (s) setV({ name: s.name, address: s.address, postal_code: s.postal_code, city: s.city });
+  }, [id, stores]);
 
   async function save() {
     const e: Record<string, string> = {};
@@ -29,21 +36,50 @@ export default function MagasinForm() {
     setErrors(e);
     if (Object.keys(e).length || !profile?.company_id) return;
     setBusy(true);
-    const { data, error } = await supabase
-      .from('stores')
-      .insert({
-        company_id: profile.company_id,
-        name: v.name.trim(),
-        address: v.address.trim(),
-        postal_code: v.postal_code.trim(),
-        city: v.city.trim(),
-      })
-      .select('id')
-      .single();
-    setBusy(false);
-    if (error) return setFormError('L’ajout a échoué. Réessayez.');
+    const row = {
+      name: v.name.trim(),
+      address: v.address.trim(),
+      postal_code: v.postal_code.trim(),
+      city: v.city.trim(),
+    };
+    if (id) {
+      const { error } = await supabase.from('stores').update(row).eq('id', id);
+      setBusy(false);
+      if (error) return setFormError('L’enregistrement a échoué. Réessayez.');
+    } else {
+      const { data, error } = await supabase
+        .from('stores')
+        .insert({ company_id: profile.company_id, ...row })
+        .select('id')
+        .single();
+      setBusy(false);
+      if (error) return setFormError('L’ajout a échoué. Réessayez.');
+      await reload();
+      setActive(data.id);
+      return router.back();
+    }
     await reload();
-    setActive(data.id);
+    router.back();
+  }
+
+  async function remove() {
+    if (!id) return;
+    const ok = await confirmAction(
+      'Supprimer ce magasin ?',
+      'S’il a déjà reçu des commandes, il sera archivé : il disparaîtra de vos listes mais ses commandes resteront dans l’historique.',
+      'Supprimer',
+    );
+    if (!ok) return;
+    setBusy(true);
+    const { error } = await supabase.rpc('remove_store', { p_store: id });
+    setBusy(false);
+    if (error)
+      return setFormError(
+        error.message === 'last_store'
+          ? 'Vous devez conserver au moins un magasin.'
+          : 'La suppression a échoué. Réessayez.',
+      );
+    await reload();
     router.back();
   }
 
@@ -51,14 +87,19 @@ export default function MagasinForm() {
     <Screen
       contentStyle={{ gap: 16, paddingTop: 24, paddingBottom: 24 }}
       footer={
-        <Button
-          label={busy ? 'Enregistrement…' : 'Ajouter le magasin'}
-          disabled={busy}
-          onPress={save}
-        />
+        <>
+          <Button
+            label={busy ? 'Enregistrement…' : id ? 'Enregistrer' : 'Ajouter le magasin'}
+            disabled={busy}
+            onPress={save}
+          />
+          {id ? (
+            <Button label="Supprimer ce magasin" variant="link" disabled={busy} onPress={remove} />
+          ) : null}
+        </>
       }
     >
-      <Text variant="modalTitle">Ajouter un magasin</Text>
+      <Text variant="modalTitle">{id ? 'Modifier le magasin' : 'Ajouter un magasin'}</Text>
       <Field
         label="Nom du magasin"
         placeholder="Parfumerie Wilson Nord"
