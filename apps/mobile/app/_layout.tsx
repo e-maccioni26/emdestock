@@ -38,6 +38,7 @@ function Routes() {
         <Stack.Screen name="filtres" options={{ presentation: 'modal' }} />
         <Stack.Screen name="magasin-form" options={{ presentation: 'modal' }} />
         <Stack.Screen name="compte-form" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="selection/[id]" />
         <Stack.Screen name="mes-commandes/index" />
         <Stack.Screen name="mes-commandes/[id]" />
         <Stack.Screen name="recap" />

@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Circle, Line, Path, Rect } from 'react-native-svg';
-import { PLACEHOLDER_SVG, getProductImageUrl, placeholderShape, tokens } from '@emd/shared';
+import { getProductImageUrl, placeholderShape, tokens } from '@emd/shared';
 import type { ProductWithImages } from '@emd/shared';
+import { BottleShape } from './BottleShape';
 
 type Props = {
   product: ProductWithImages;
@@ -25,8 +25,6 @@ export function ProductImage({
   out,
 }: Props) {
   const url = getProductImageUrl(product, size, process.env.EXPO_PUBLIC_SUPABASE_URL ?? '');
-  const shape = PLACEHOLDER_SVG[placeholderShape(product)];
-  const scale = (dimension * 0.5) / shape.height;
   return (
     <View
       accessible
@@ -49,32 +47,11 @@ export function ProductImage({
           style={{ width: dimension, height: dimension }}
         />
       ) : (
-        <Svg
-          width={shape.width * scale}
-          height={shape.height * scale}
-          viewBox={shape.viewBox}
-          fill="none"
+        <BottleShape
+          shape={placeholderShape(product)}
+          height={dimension * 0.5}
           stroke={tokens.color.ink}
-          strokeWidth={1.5}
-          strokeLinejoin="round"
-        >
-          {shape.shapes.map((s, i) => {
-            if (s.tag === 'rect')
-              return (
-                <Rect
-                  key={i}
-                  x={s.x}
-                  y={s.y}
-                  width={s.width}
-                  height={s.height}
-                  rx={'rx' in s ? s.rx : undefined}
-                />
-              );
-            if (s.tag === 'circle') return <Circle key={i} cx={s.cx} cy={s.cy} r={s.r} />;
-            if (s.tag === 'line') return <Line key={i} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} />;
-            return <Path key={i} d={s.d} />;
-          })}
-        </Svg>
+        />
       )}
       {out ? (
         <View

@@ -79,14 +79,14 @@ isOneToOne: false
                   ]
                 },"banners": {
                   Row: {
-                    "audience": Database["public"]['Enums']["banner_audience"],"created_at": string,"cta_label": string,"ends_at": string,"eyebrow": string,"id": string,"image_path": string | null,"position": number,"starts_at": string,"target_id": string | null,"target_type": Database["public"]['Enums']["banner_target"],"theme": Database["public"]['Enums']["banner_theme"],"title": string
+                    "audience": Database["public"]['Enums']["banner_audience"],"created_at": string,"cta_label": string,"ends_at": string,"eyebrow": string,"id": string,"image_path": string | null,"position": number,"shape": Database["public"]['Enums']["placeholder_shape"],"starts_at": string,"target_id": string | null,"target_type": Database["public"]['Enums']["banner_target"],"theme": Database["public"]['Enums']["banner_theme"],"title": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "audience"?: Database["public"]['Enums']["banner_audience"],"created_at"?: string,"cta_label": string,"ends_at": string,"eyebrow": string,"id"?: string,"image_path"?: string | null,"position"?: number,"starts_at": string,"target_id"?: string | null,"target_type": Database["public"]['Enums']["banner_target"],"theme"?: Database["public"]['Enums']["banner_theme"],"title": string
+                    "audience"?: Database["public"]['Enums']["banner_audience"],"created_at"?: string,"cta_label": string,"ends_at": string,"eyebrow": string,"id"?: string,"image_path"?: string | null,"position"?: number,"shape"?: Database["public"]['Enums']["placeholder_shape"],"starts_at": string,"target_id"?: string | null,"target_type": Database["public"]['Enums']["banner_target"],"theme"?: Database["public"]['Enums']["banner_theme"],"title": string
                   }
                   Update: {
-                    "audience"?: Database["public"]['Enums']["banner_audience"],"created_at"?: string,"cta_label"?: string,"ends_at"?: string,"eyebrow"?: string,"id"?: string,"image_path"?: string | null,"position"?: number,"starts_at"?: string,"target_id"?: string | null,"target_type"?: Database["public"]['Enums']["banner_target"],"theme"?: Database["public"]['Enums']["banner_theme"],"title"?: string
+                    "audience"?: Database["public"]['Enums']["banner_audience"],"created_at"?: string,"cta_label"?: string,"ends_at"?: string,"eyebrow"?: string,"id"?: string,"image_path"?: string | null,"position"?: number,"shape"?: Database["public"]['Enums']["placeholder_shape"],"starts_at"?: string,"target_id"?: string | null,"target_type"?: Database["public"]['Enums']["banner_target"],"theme"?: Database["public"]['Enums']["banner_theme"],"title"?: string
                   }
                   Relationships: [
                     
@@ -375,6 +375,7 @@ isOneToOne: false
 "id": string,
 "image_path": string | null,
 "position": number,
+"shape": Database["public"]['Enums']["placeholder_shape"],
 "starts_at": string,
 "target_id": string | null,
 "target_type": Database["public"]['Enums']["banner_target"],
@@ -423,6 +424,9 @@ isOneToOne: false
 "remove_store":
 { Args: { "p_store": string }; Returns: string
                            },
+"reorder_banners":
+{ Args: { "p_ids": (string)[] }; Returns: undefined
+                           },
 "reorder_product_images":
 { Args: { "p_ids": (string)[],"p_product": string }; Returns: undefined
                            },
@@ -455,6 +459,11 @@ isOneToOne: false
                            },
 "show_trgm":
 { Args: { "": string }; Returns: (string)[]
+                           },
+"top_ordered_products":
+{ Args: { "p_limit"?: number }; Returns: {
+              "product_id": string,"units": number
+            }[]
                            },
 "unaccent":
 { Args: { "": string }; Returns: string

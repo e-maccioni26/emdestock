@@ -9,15 +9,14 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { ChevronDown, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react-native';
+import { Search, SlidersHorizontal } from 'lucide-react-native';
 import { formatNumber, tokens } from '@emd/shared';
 import { Button } from '@/components/Button';
 import { Chip } from '@/components/Chip';
-import { Logo } from '@/components/Logo';
+import { StoreHeader } from '@/components/StoreHeader';
 import { ProductCard, type ProductRow } from '@/components/ProductCard';
 import { Text } from '@/components/Text';
 import { PAGE_SIZE, PRODUCT_COLUMNS, catalogQuery, useCatalog } from '@/lib/catalog';
-import { useStores } from '@/lib/stores';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 
@@ -58,7 +57,6 @@ export default function Catalogue() {
   const top = Platform.OS === 'web' ? tokens.layout.mobile.safeTop : insets.top;
   const cardWidth = (Math.min(screenWidth, tokens.layout.mobile.width) - GUTTER * 2 - GAP) / 2;
   const { filters, setFilters, activeCount, categories } = useCatalog();
-  const { active } = useStores();
 
   const [text, setText] = useState(filters.query);
   const [items, setItems] = useState<ProductRow[]>([]);
@@ -101,38 +99,7 @@ export default function Catalogue() {
 
   const header = (
     <View style={{ paddingTop: top, paddingBottom: 8, gap: 16 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: 44,
-        }}
-      >
-        <Logo width={64} height={38} />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`Magasin actif : ${active?.name ?? 'aucun'}. Changer de magasin`}
-          onPress={() => router.push('/magasin')}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            height: 44,
-            paddingLeft: 14,
-            paddingRight: 12,
-            borderWidth: 1,
-            borderColor: tokens.color.border,
-            borderRadius: tokens.radius.pill,
-          }}
-        >
-          <StoreIcon size={16} strokeWidth={1.8} color={tokens.color.ink} />
-          <Text style={{ fontFamily: 'Geist-Medium', fontSize: 13 }} numberOfLines={1}>
-            {active?.name ?? 'Magasin'}
-          </Text>
-          <ChevronDown size={14} strokeWidth={2} color={tokens.color.ink} />
-        </Pressable>
-      </View>
+      <StoreHeader />
       <View style={{ gap: 4 }}>
         <Text variant="screenTitle">Catalogue</Text>
         <Text variant="secondary" style={{ color: tokens.color.textSecondary }}>

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  bannerStatus,
+  exceedsActiveLimit,
+  maxConcurrent,
+  parisMidnight,
+  toParisDate,
   formatDayMonth,
   formatDateTimeLong,
   formatShortDateTime,
@@ -123,5 +128,38 @@ describe('auth', () => {
     expect(accessState({ role: 'client', company_status: 'refused' })).toBe('pending');
     expect(accessState({ role: 'client', company_status: 'suspended' })).toBe('suspended');
     expect(accessState({ role: 'admin', company_status: null })).toBe('blocked');
+  });
+});
+
+describe('encarts', () => {
+  const b = (start: string, end: string) => ({ starts_at: start, ends_at: end });
+  it('statut calculé', () => {
+    const now = new Date('2026-10-12T10:00:00Z');
+    expect(bannerStatus(b('2026-10-13T00:00:00Z', '2026-10-20T00:00:00Z'), now)).toBe('scheduled');
+    expect(bannerStatus(b('2026-10-01T00:00:00Z', '2026-10-20T00:00:00Z'), now)).toBe('active');
+    expect(bannerStatus(b('2026-10-01T00:00:00Z', '2026-10-12T10:00:00Z'), now)).toBe('ended'); // fin exclue
+    expect(bannerStatus(b('2026-10-12T10:00:00Z', '2026-10-20T00:00:00Z'), now)).toBe('active'); // début inclus
+  });
+  it('limite de 5 encarts actifs simultanés', () => {
+    const five = Array.from({ length: 5 }, () => b('2026-10-01T00:00:00Z', '2026-10-31T00:00:00Z'));
+    expect(
+      exceedsActiveLimit(five.slice(0, 4), b('2026-10-10T00:00:00Z', '2026-10-20T00:00:00Z')),
+    ).toBe(false);
+    expect(exceedsActiveLimit(five, b('2026-10-10T00:00:00Z', '2026-10-20T00:00:00Z'))).toBe(true);
+    // 5 existants mais pas en même temps : un sixième ne dépasse pas la limite
+    const seq = [1, 2, 3, 4, 5].map((i) => b(`2026-0${i}-01T00:00:00Z`, `2026-0${i}-28T00:00:00Z`));
+    expect(exceedsActiveLimit(seq, b('2026-10-01T00:00:00Z', '2026-10-20T00:00:00Z'))).toBe(false);
+    // intervalles accolés : pas de chevauchement
+    expect(
+      maxConcurrent([
+        { start: 0, end: 10 },
+        { start: 10, end: 20 },
+      ]),
+    ).toBe(1);
+  });
+  it('dates à Paris, heure d’été comprise', () => {
+    expect(parisMidnight('2026-07-14').toISOString()).toBe('2026-07-13T22:00:00.000Z');
+    expect(parisMidnight('2026-12-25').toISOString()).toBe('2026-12-24T23:00:00.000Z');
+    expect(toParisDate('2026-07-13T22:30:00Z')).toBe('2026-07-14');
   });
 });

@@ -191,6 +191,32 @@ reset role;
 select set_config('request.jwt.claims', '{"role":"service_role"}', true);
 select lives_ok($q$update companies set status = 'deleted', phone = null where siret = '11111111111119'$q$, 'service_role : statut modifiable');
 
+-- Encarts : visibilité par audience et dates, plus commandés, réordonnancement
+reset role;
+select set_config('request.jwt.claims', '{"role":"service_role"}', true);
+update companies set status = 'active' where siret = '11111111111119'; -- remis actif après le test de suppression
+insert into banners (id, eyebrow, title, cta_label, target_type, audience, starts_at, ends_at, position) values
+  ('00000000-0000-0000-0000-0000000000b1', 'T', 'Encart nouveaux', 'Voir', 'brand', 'new', now() - interval '1 day', now() + interval '1 day', 0),
+  ('00000000-0000-0000-0000-0000000000b2', 'T', 'Encart tous', 'Voir', 'brand', 'all', now() - interval '1 day', now() + interval '1 day', 1),
+  ('00000000-0000-0000-0000-0000000000b3', 'T', 'Encart programmé', 'Voir', 'brand', 'all', now() + interval '1 day', now() + interval '2 days', 2),
+  ('00000000-0000-0000-0000-0000000000b4', 'T', 'Encart terminé', 'Voir', 'brand', 'all', now() - interval '2 days', now() - interval '1 day', 3);
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+-- ce client n'a que des commandes annulées : il compte comme « sans commande » (audience new)
+select is((select count(*) from my_banners() where eyebrow = 'T')::int, 2, 'sans commande valide : encarts new + all actifs');
+select is((select count(*) from my_banners() where title in ('Encart programmé', 'Encart terminé'))::int, 0, 'programmé et terminé exclus');
+reset role;
+update orders set status = 'received' where id = (select id from placed);
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from my_banners() where eyebrow = 'T')::int, 1, 'avec une commande : seuls les encarts all');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c2');
+select is((select count(*) from my_banners())::int, 0, 'entreprise non active : aucun encart');
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select lives_ok($q$select reorder_banners(array['00000000-0000-0000-0000-0000000000b2','00000000-0000-0000-0000-0000000000b1']::uuid[])$q$, 'réordonnancement des encarts');
+select is((select position from banners where id = '00000000-0000-0000-0000-0000000000b2'), 0, 'nouvel ordre appliqué');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select ok((select count(*) from top_ordered_products(5)) >= 1, 'plus commandés : au moins un produit');
+select is((select count(*) from top_ordered_products(5) where product_id = (select p3 from ids))::int, 0, 'produit masqué exclu des plus commandés');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

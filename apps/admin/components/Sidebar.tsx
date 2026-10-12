@@ -19,7 +19,7 @@ const NAV: { href: string; label: string; icon: LucideIcon; built: boolean }[] =
   { href: '/commandes', label: 'Commandes', icon: Package, built: true },
   { href: '/produits', label: 'Produits & stocks', icon: Tag, built: true },
   { href: '/clients', label: 'Clients', icon: Users, built: true },
-  { href: '/encarts', label: 'Encarts d’accueil', icon: GalleryHorizontal, built: false },
+  { href: '/encarts', label: 'Encarts d’accueil', icon: GalleryHorizontal, built: true },
 ];
 
 export function Sidebar({
