@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Design system EMD DESTOCK</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0A0A0A}a:hover{color:#3F3F3F}
+</style>
+</helmet>
+<div style="width: 1280px; height: 2200px; box-sizing: border-box; padding: 80px; display: flex; flex-direction: column; gap: 80px; background: #FFFFFF; color: #0A0A0A; font-family: 'Geist', -apple-system, 'Helvetica Neue', sans-serif;">
+
+<header style="display: flex; align-items: center; gap: 40px; padding-bottom: 48px; border-bottom: 1px solid #E5E5E5;">
+<img src="../logo-emd.jpg" alt="Logo EMD" style="width: 168px; height: 98px; object-fit: contain;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<p style="margin: 0; font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B6B;">EMD DESTOCK · Application client iOS</p>
+<h1 style="margin: 0; font-size: 40px; line-height: 48px; font-weight: 600; letter-spacing: -0.02em;">Design system</h1>
+<p style="margin: 0; max-width: 620px; font-size: 15px; line-height: 22px; color: #6B6B6B;">Le logo porte l'expression de la marque. L'interface reste neutre : encre, blanc, gris chauds, et un rouge réservé à quelques signaux.</p>
+</div>
+</header>
+
+<section style="display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 600;">Couleurs</h2>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #0A0A0A;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Encre</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#0A0A0A</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Texte, boutons principaux, onglet actif</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E5E5E5; box-sizing: border-box;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Blanc</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#FFFFFF</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Fond des écrans, cartes</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #F4F4F3;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Pierre</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#F4F4F3</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Fond photos produits, recherche</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #E5E5E5;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Trait</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#E5E5E5</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Bordures, séparateurs</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #6B6B6B;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Gris texte</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#6B6B6B</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Texte secondaire (contraste 5,3:1)</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="height: 112px; border-radius: 12px; background: #D9301F;"></div>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Rouge EMD</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#D9301F</span><span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">Accent rare : pastille panier, détails de marque</span></div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px;">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ECFDF3; color: #067647; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #067647;"></span>Succès</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#067647 / #ECFDF3</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #FFFAEB; color: #93370D; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #DC6803;"></span>Attention</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#93370D / #FFFAEB</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #FEF3F2; color: #B42318; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #B42318;"></span>Erreur</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#B42318 / #FEF3F2</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #F0F0F0; color: #3F3F3F; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #6B6B6B;"></span>Neutre</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">#3F3F3F / #F0F0F0</span>
+</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 8px;">
+<h2 style="margin: 0 0 16px; font-size: 20px; line-height: 26px; font-weight: 600;">Typographie · Geist et Geist Mono</h2>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Titre d'écran</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">600 · 28/34 · −0,02em</span></div>
+<span style="font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em;">Catalogue</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Titre produit</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">600 · 22/28 · −0,01em</span></div>
+<span style="font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em;">Ambre Nocturne, Eau de Parfum 100 ml</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Titre de section</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">600 · 17/22</span></div>
+<span style="font-size: 17px; line-height: 22px; font-weight: 600;">Magasin de livraison</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Corps</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">400 · 15/22</span></div>
+<span style="font-size: 15px; line-height: 22px;">Un sillage chaud d'ambre et de vanille, relevé par une pointe de poivre rose.</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Secondaire</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">400 · 13/18 · #6B6B6B</span></div>
+<span style="font-size: 13px; line-height: 18px; color: #6B6B6B;">2 384 références disponibles</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Surtitre marque</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">500 · 11/14 · capitales +0,06em</span></div>
+<span style="font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Maison Lior</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0; border-bottom: 1px solid #E5E5E5;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Données</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">Geist Mono 400 · 13/18</span></div>
+<span style="font-family: 'Geist Mono', monospace; font-size: 13px; line-height: 18px;">EAN 3760123456789 · Réf. ML-AN-100</span>
+</div>
+<div style="display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: center; padding: 16px 0;">
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 14px; font-weight: 600;">Prix</span><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">600 · chiffres tabulaires</span></div>
+<span style="font-size: 22px; line-height: 28px; font-weight: 600; font-variant-numeric: tabular-nums;">38,50 € <span style="font-size: 13px; font-weight: 500; color: #6B6B6B;">HT</span></span>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 600;">Composants</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Boutons</span>
+<button type="button" style="height: 52px; border: 0; border-radius: 12px; background: #0A0A0A; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600;">Ajouter à la commande</button>
+<button type="button" style="height: 52px; border: 1px solid #D4D4D4; border-radius: 12px; background: #FFFFFF; color: #0A0A0A; font-family: inherit; font-size: 15px; font-weight: 600;">Demander un accès</button>
+<button type="button" disabled style="height: 52px; border: 0; border-radius: 12px; background: #EBEBEA; color: #8F8F8F; font-family: inherit; font-size: 15px; font-weight: 600;">Vérifier la commande</button>
+<button type="button" style="height: 44px; border: 0; background: transparent; color: #0A0A0A; font-family: inherit; font-size: 15px; font-weight: 500; text-decoration: underline; text-underline-offset: 3px;">Mot de passe oublié ?</button>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #6B6B6B;">Hauteur 52 px (44 px compact), rayon 12 px, texte 15 px semi-gras.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Champs</span>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="ds-a" style="font-size: 13px; font-weight: 500;">Raison sociale</label>
+<input id="ds-a" type="text" placeholder="Parfumerie Wilson SAS" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #E5E5E5; border-radius: 12px; font-family: inherit; font-size: 15px; color: #0A0A0A; background: #FFFFFF;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="ds-b" style="font-size: 13px; font-weight: 500;">E-mail (actif)</label>
+<input id="ds-b" type="email" value="contact@parfumerie-wilson.fr" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #0A0A0A; box-shadow: 0 0 0 1px #0A0A0A; border-radius: 12px; font-family: inherit; font-size: 15px; color: #0A0A0A; background: #FFFFFF;">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<label for="ds-c" style="font-size: 13px; font-weight: 500;">SIRET</label>
+<input id="ds-c" type="text" value="909 639 668 0001" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #B42318; border-radius: 12px; font-family: 'Geist Mono', monospace; font-size: 15px; color: #0A0A0A; background: #FFFFFF;">
+<span style="font-size: 13px; line-height: 18px; color: #B42318;">Le SIRET doit contenir 14 chiffres.</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Statuts de commande</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #F0F0F0; color: #3F3F3F; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #6B6B6B;"></span>Reçue</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #FFFAEB; color: #93370D; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #DC6803;"></span>En préparation</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ECFDF3; color: #067647; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #067647;"></span>Traitée</span>
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #FEF3F2; color: #B42318; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #B42318;"></span>Annulée</span>
+</div>
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; padding-top: 8px;">Disponibilité</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px;">
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #ECFDF3; color: #067647; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;">142 en stock</span>
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #FFFAEB; color: #93370D; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;">Plus que 4</span>
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #0A0A0A; color: #FFFFFF; font-size: 11px; font-weight: 600;">Rupture</span>
+</div>
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B; padding-top: 8px;">Pastille panier</span>
+<div style="position: relative; width: 28px; height: 28px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path></svg>
+<span style="position: absolute; top: -6px; right: -10px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #D9301F; color: #FFFFFF; font-size: 11px; line-height: 18px; font-weight: 700; text-align: center;">3</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Carte produit</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="height: 148px; border-radius: 12px; background: #F4F4F3; display: flex; align-items: center; justify-content: center;">
+<svg width="48" height="72" viewBox="0 0 64 96" fill="none" stroke="#0A0A0A" stroke-width="1.5" aria-hidden="true"><rect x="24" y="4" width="16" height="14" rx="2"></rect><rect x="28" y="18" width="8" height="8"></rect><rect x="10" y="26" width="44" height="64" rx="6"></rect><line x1="18" y1="58" x2="46" y2="58"></line></svg>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Maison Lior</span>
+<span style="font-size: 14px; line-height: 19px; font-weight: 500;">Ambre Nocturne EDP 100 ml</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;">38,50 €</span><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #ECFDF3; color: #067647; font-size: 11px; font-weight: 600;">142</span></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="position: relative; height: 148px; border-radius: 12px; background: #F4F4F3; display: flex; align-items: center; justify-content: center;">
+<svg width="54" height="72" viewBox="0 0 72 96" fill="none" stroke="#0A0A0A" stroke-width="1.5" aria-hidden="true"><rect x="27" y="4" width="18" height="12" rx="2"></rect><rect x="31" y="16" width="10" height="10"></rect><circle cx="36" cy="60" r="32"></circle></svg>
+<div style="position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,0.55);"></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Atelier Sorel</span>
+<span style="font-size: 14px; line-height: 19px; font-weight: 500;">Musc Blanc EDP 30 ml</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 15px; font-weight: 600; color: #6B6B6B; font-variant-numeric: tabular-nums;">21,00 €</span><span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #0A0A0A; color: #FFFFFF; font-size: 11px; font-weight: 600;">Rupture</span></div>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Quantité et magasin</span>
+<div style="display: inline-flex; align-items: center; align-self: flex-start; height: 44px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<button type="button" aria-label="Retirer une unité" style="width: 44px; height: 44px; border: 0; background: transparent; color: #0A0A0A; font-family: inherit; font-size: 20px;">−</button>
+<span style="width: 40px; text-align: center; font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;">12</span>
+<button type="button" aria-label="Ajouter une unité" style="width: 44px; height: 44px; border: 0; background: transparent; color: #0A0A0A; font-family: inherit; font-size: 20px;">+</button>
+</div>
+<button type="button" style="display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px 16px; border-radius: 12px; border: 1px solid #0A0A0A; box-shadow: 0 0 0 1px #0A0A0A; background: #FFFFFF; font-family: inherit; color: #0A0A0A;">
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 15px; font-weight: 600;">Parfumerie Wilson</span><span style="font-size: 13px; color: #6B6B6B;">113 av. du Président Wilson</span></span>
+<span style="width: 22px; height: 22px; border-radius: 999px; background: #0A0A0A; display: flex; align-items: center; justify-content: center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg></span>
+</button>
+<button type="button" style="display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px 16px; border-radius: 12px; border: 1px solid #E5E5E5; background: #FFFFFF; font-family: inherit; color: #0A0A0A;">
+<span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 15px; font-weight: 600;">Parfumerie Wilson Nord</span><span style="font-size: 13px; color: #6B6B6B;">[Adresse du 2ᵉ magasin]</span></span>
+<span style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid #D4D4D4;"></span>
+</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid #E5E5E5; border-radius: 16px;">
+<span style="font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">Barre d'onglets</span>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #E5E5E5; padding-top: 6px;">
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Accueil</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #0A0A0A;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg><span style="font-size: 10px; font-weight: 600;">Catalogue</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path></svg><span style="font-size: 10px; font-weight: 500;">Commande</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><span style="font-size: 10px; font-weight: 500;">Compte</span></div>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #6B6B6B;">Icônes 24 px au trait 1,6 px. L'onglet actif passe en encre et en semi-gras, sans couleur supplémentaire.</p>
+</div>
+
+</div>
+</section>
+
+<section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px;">
+<div style="display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 600;">Espacements · grille de 8</h2>
+<div style="display: flex; align-items: flex-end; gap: 20px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 4px; height: 4px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">4</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 8px; height: 8px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">8</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 12px; height: 12px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">12</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 16px; height: 16px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">16</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 20px; height: 20px; background: #D9301F;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">20</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 24px; height: 24px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">24</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">32</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 48px; height: 48px; background: #0A0A0A;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">48</span></div>
+</div>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #6B6B6B;">Marges latérales des écrans : 20 px (en rouge). Zones tactiles d'au moins 44 × 44 px. Safe areas iOS respectées en haut et en bas.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; font-size: 20px; line-height: 26px; font-weight: 600;">Rayons</h2>
+<div style="display: flex; align-items: flex-end; gap: 24px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 72px; height: 72px; border: 1.5px solid #0A0A0A; border-radius: 6px;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">6 · badges</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 72px; height: 72px; border: 1.5px solid #0A0A0A; border-radius: 12px;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">12 · champs, cartes</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 72px; height: 72px; border: 1.5px solid #0A0A0A; border-radius: 16px;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">16 · blocs</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><div style="width: 72px; height: 72px; border: 1.5px solid #0A0A0A; border-radius: 999px;"></div><span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #6B6B6B;">pilule · filtres</span></div>
+</div>
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

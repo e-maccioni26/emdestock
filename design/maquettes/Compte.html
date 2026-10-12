@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Compte</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0A0A0A}a:hover{color:#3F3F3F}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1320px; overflow: hidden; background: #FFFFFF; color: #0A0A0A; font-family: 'Geist', -apple-system, 'Helvetica Neue', sans-serif;">
+
+<div style="padding: 56px 20px 0; display: flex; flex-direction: column; gap: 32px;">
+
+<h1 style="margin: 12px 0 0; font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em;">Compte</h1>
+
+<div style="display: flex; align-items: center; gap: 14px; margin-top: -12px;">
+<span style="flex-shrink: 0; width: 56px; height: 56px; border-radius: 999px; background: #0A0A0A; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600;">CM</span>
+<div style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 17px; font-weight: 600;">Camille Martin</span><span style="font-size: 13px; color: #6B6B6B;">Parfumerie Wilson SAS</span><span style="font-size: 13px; color: #6B6B6B;">contact@parfumerie-wilson.fr</span></div>
+</div>
+
+<section style="display: flex; flex-direction: column;">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<h2 style="margin: 0; font-size: 17px; line-height: 22px; font-weight: 600;">Mes commandes</h2>
+<a href="#" style="display: inline-flex; align-items: center; height: 44px; font-size: 14px; font-weight: 500; color: #0A0A0A; text-underline-offset: 3px;">Tout voir</a>
+</div>
+<sc-for list="{{orders}}" as="o" hint-placeholder-count="4">
+<a href="#" style="display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #E5E5E5; text-decoration: none; color: #0A0A0A;">
+<div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0;">
+<div style="display: flex; align-items: center; gap: 8px;"><span style="font-family: 'Geist Mono', monospace; font-size: 13px;">{{o.ref}}</span><span style="display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: {{o.bg}}; color: {{o.fg}}; font-size: 11px; font-weight: 600;"><span style="width: 5px; height: 5px; border-radius: 999px; background: {{o.dot}};"></span>{{o.status}}</span></div>
+<span style="font-size: 13px; color: #6B6B6B;">{{o.meta}}</span>
+</div>
+<span style="font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums;">{{o.amount}}</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+</a>
+</sc-for>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px;">
+<h2 style="margin: 0; font-size: 17px; line-height: 22px; font-weight: 600;">Mes magasins</h2>
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px; background: #F4F4F3; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"></path><path d="M4 9v11h16V9"></path><path d="M9 20v-6h6v6"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 15px; font-weight: 600;">Parfumerie Wilson</span><span style="font-size: 13px; color: #6B6B6B;">113 av. du Président Wilson</span></div>
+<button type="button" aria-label="Modifier Parfumerie Wilson" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #0A0A0A;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid #E5E5E5; border-radius: 12px;">
+<span style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 10px; background: #F4F4F3; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"></path><path d="M4 9v11h16V9"></path><path d="M9 20v-6h6v6"></path></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1;"><span style="font-size: 15px; font-weight: 600;">Parfumerie Wilson Nord</span><span style="font-size: 13px; color: #6B6B6B;">[Adresse du 2e magasin]</span></div>
+<button type="button" aria-label="Modifier Parfumerie Wilson Nord" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; color: #0A0A0A;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button>
+</div>
+<button type="button" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; color: #0A0A0A;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>Ajouter un magasin</button>
+</section>
+
+<section style="display: flex; flex-direction: column;">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<h2 style="margin: 0; font-size: 17px; line-height: 22px; font-weight: 600;">Entreprise</h2>
+<a href="#" style="display: inline-flex; align-items: center; height: 44px; font-size: 14px; font-weight: 500; color: #0A0A0A; text-underline-offset: 3px;">Modifier</a>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; border-bottom: 1px solid #E5E5E5;"><span style="font-size: 14px; color: #6B6B6B;">Raison sociale</span><span style="font-size: 14px;">Parfumerie Wilson SAS</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; border-bottom: 1px solid #E5E5E5;"><span style="font-size: 14px; color: #6B6B6B;">SIRET</span><span style="font-family: 'Geist Mono', monospace; font-size: 13px;">909 639 668 00013</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; border-bottom: 1px solid #E5E5E5;"><span style="font-size: 14px; color: #6B6B6B;">Téléphone</span><span style="font-size: 14px;">[Téléphone]</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; border-bottom: 1px solid #E5E5E5;"><span style="font-size: 14px; color: #6B6B6B;">Siège</span><span style="font-size: 14px;">113 av. du Président Wilson</span></div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 4px; padding-bottom: 8px;">
+<a href="Connexion.html" style="display: flex; align-items: center; justify-content: center; height: 52px; box-sizing: border-box; border: 1px solid #D4D4D4; border-radius: 12px; background: #FFFFFF; color: #0A0A0A; font-size: 15px; font-weight: 600; text-decoration: none;">Se déconnecter</a>
+<button type="button" style="height: 44px; border: 0; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; color: #B42318;">Supprimer mon compte</button>
+</section>
+
+</div>
+
+<nav aria-label="Navigation principale" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 6px 8px 34px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #FFFFFF; border-top: 1px solid #E5E5E5;">
+<a href="Accueil.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Accueil</span></a>
+<a href="Catalogue.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg><span style="font-size: 10px; font-weight: 500;">Catalogue</span></a>
+<a href="Commande.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><span style="position: relative; display: flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path></svg><span style="position: absolute; top: -4px; right: -10px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #D9301F; color: #FFFFFF; font-size: 11px; line-height: 18px; font-weight: 700; text-align: center;">3</span></span><span style="font-size: 10px; font-weight: 500;">Commande</span></a>
+<a href="Compte.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #0A0A0A; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><span style="font-size: 10px; font-weight: 600;">Compte</span></a>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1320}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var S = {
+      recue: { status: 'Reçue', bg: '#F0F0F0', fg: '#3F3F3F', dot: '#6B6B6B' },
+      prep: { status: 'En préparation', bg: '#FFFAEB', fg: '#93370D', dot: '#DC6803' },
+      ok: { status: 'Traitée', bg: '#ECFDF3', fg: '#067647', dot: '#067647' },
+      ko: { status: 'Annulée', bg: '#FEF3F2', fg: '#B42318', dot: '#B42318' }
+    };
+    var rows = [
+      { ref: 'CMD-2026-0143', meta: '1 oct. · Parfumerie Wilson', amount: '814,20 €', s: 'recue' },
+      { ref: 'CMD-2026-0142', meta: '28 sept. · Parfumerie Wilson', amount: '1 126,40 €', s: 'prep' },
+      { ref: 'CMD-2026-0138', meta: '19 sept. · Wilson Nord', amount: '642,00 €', s: 'ok' },
+      { ref: 'CMD-2026-0131', meta: '9 sept. · Parfumerie Wilson', amount: '210,50 €', s: 'ko' }
+    ];
+    var orders = rows.map(function (r) {
+      var st = S[r.s];
+      return { ref: r.ref, meta: r.meta, amount: r.amount, status: st.status, bg: st.bg, fg: st.fg, dot: st.dot };
+    });
+    return { orders: orders };
+  }
+}
+</script>
+</body>
+</html>

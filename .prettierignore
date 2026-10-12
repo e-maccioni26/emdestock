@@ -1,0 +1,8 @@
+design
+docs
+pnpm-lock.yaml
+.next
+.expo
+supabase/migrations
+database.types.ts
+apps/admin/next-env.d.ts

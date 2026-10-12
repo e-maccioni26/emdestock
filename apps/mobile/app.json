@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "EMD DESTOCK",
+    "slug": "emd-destock",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "emd-destock",
+    "userInterfaceStyle": "light",
+    "ios": { "bundleIdentifier": "fr.emddestock.app", "supportsTablet": false },
+    "web": { "output": "single", "bundler": "metro" },
+    "plugins": ["expo-router", "expo-font"],
+    "experiments": { "typedRoutes": true }
+  }
+}

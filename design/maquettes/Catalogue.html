@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Catalogue</title>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0A0A0A}a:hover{color:#3F3F3F}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #FFFFFF; color: #0A0A0A; font-family: 'Geist', -apple-system, 'Helvetica Neue', sans-serif;">
+
+<div style="padding: 56px 20px 0; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px;">
+<img src="../logo-emd.jpg" alt="EMD DESTOCK" style="width: 64px; height: 38px; object-fit: contain; object-position: left center;">
+<button type="button" style="display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 12px 0 14px; border: 1px solid #E5E5E5; border-radius: 999px; background: #FFFFFF; font-family: inherit; font-size: 13px; font-weight: 500; color: #0A0A0A;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"></path><path d="M4 9v11h16V9"></path><path d="M9 20v-6h6v6"></path></svg>
+Parfumerie Wilson
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 600; letter-spacing: -0.02em;">Catalogue</h1>
+<p style="margin: 0; font-size: 13px; line-height: 18px; color: #6B6B6B;">2 384 références disponibles</p>
+</div>
+
+<div style="display: flex; gap: 8px;">
+<label style="display: flex; align-items: center; gap: 10px; flex-grow: 1; height: 44px; padding: 0 14px; border-radius: 12px; background: #F4F4F3; color: #6B6B6B;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input type="search" aria-label="Rechercher" placeholder="Produit, marque, réf. ou EAN" style="flex-grow: 1; min-width: 0; border: 0; outline: none; background: transparent; font-family: inherit; font-size: 15px; color: #0A0A0A;">
+</label>
+<button type="button" aria-label="Filtres" style="position: relative; width: 44px; height: 44px; border: 1px solid #E5E5E5; border-radius: 12px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; color: #0A0A0A;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16"></path><path d="M7 12h10"></path><path d="M10 18h4"></path></svg>
+</button>
+</div>
+
+<div style="display: flex; gap: 8px; margin: 0 -20px; padding: 0 20px; overflow: hidden;">
+<sc-for list="{{chips}}" as="chip" hint-placeholder-count="5">
+<button type="button" onClick="{{chip.pick}}" style="flex-shrink: 0; height: 44px; padding: 0; border: 0; background: transparent; font-family: inherit;">
+<span style="display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 500; background: {{chip.bg}}; color: {{chip.fg}}; border: 1px solid {{chip.bd}}; box-sizing: border-box;">{{chip.label}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+
+<div style="padding: 8px 20px 120px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; row-gap: 24px;">
+<sc-for list="{{products}}" as="item" hint-placeholder-count="4">
+<a href="Produit.html" style="display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: #0A0A0A;">
+<div style="position: relative; height: 169px; border-radius: 12px; background: #F4F4F3; display: flex; align-items: center; justify-content: center;">
+<sc-if value="{{item.tall}}" hint-placeholder-val="{{ true }}">
+<svg width="56" height="84" viewBox="0 0 64 96" fill="none" stroke="#0A0A0A" stroke-width="1.5" aria-hidden="true"><rect x="24" y="4" width="16" height="14" rx="2"></rect><rect x="28" y="18" width="8" height="8"></rect><rect x="10" y="26" width="44" height="64" rx="6"></rect><line x1="18" y1="58" x2="46" y2="58"></line></svg>
+</sc-if>
+<sc-if value="{{item.round}}" hint-placeholder-val="{{ false }}">
+<svg width="63" height="84" viewBox="0 0 72 96" fill="none" stroke="#0A0A0A" stroke-width="1.5" aria-hidden="true"><rect x="27" y="4" width="18" height="12" rx="2"></rect><rect x="31" y="16" width="10" height="10"></rect><circle cx="36" cy="60" r="32"></circle></svg>
+</sc-if>
+<sc-if value="{{item.tube}}" hint-placeholder-val="{{ false }}">
+<svg width="42" height="84" viewBox="0 0 48 96" fill="none" stroke="#0A0A0A" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h32l-5 70H13z"></path><rect x="16" y="76" width="16" height="14" rx="2"></rect><line x1="12" y1="20" x2="36" y2="20"></line></svg>
+</sc-if>
+<sc-if value="{{item.out}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; border-radius: 12px; background: rgba(255,255,255,0.55);"></div>
+</sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span style="font-size: 11px; line-height: 14px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6B6B6B;">{{item.brand}}</span>
+<span style="font-size: 14px; line-height: 19px; font-weight: 500; height: 38px; overflow: hidden;">{{item.name}}</span>
+<span style="font-family: 'Geist Mono', monospace; font-size: 11px; line-height: 14px; color: #6B6B6B;">{{item.ref}}</span>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+<span style="font-size: 15px; line-height: 20px; font-weight: 600; font-variant-numeric: tabular-nums;">{{item.price}}</span>
+<sc-if value="{{item.ok}}" hint-placeholder-val="{{ true }}">
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #ECFDF3; color: #067647; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;">{{item.stock}}</span>
+</sc-if>
+<sc-if value="{{item.low}}" hint-placeholder-val="{{ false }}">
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #FFFAEB; color: #93370D; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;">{{item.stock}}</span>
+</sc-if>
+<sc-if value="{{item.out}}" hint-placeholder-val="{{ false }}">
+<span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; background: #0A0A0A; color: #FFFFFF; font-size: 11px; font-weight: 600;">Rupture</span>
+</sc-if>
+</div>
+</a>
+</sc-for>
+</div>
+
+<nav aria-label="Navigation principale" style="position: absolute; left: 0; right: 0; bottom: 0; box-sizing: border-box; padding: 6px 8px 34px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #FFFFFF; border-top: 1px solid #E5E5E5;">
+<a href="Accueil.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg><span style="font-size: 10px; font-weight: 500;">Accueil</span></a>
+<a href="Catalogue.html" aria-current="page" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #0A0A0A; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg><span style="font-size: 10px; font-weight: 600;">Catalogue</span></a>
+<a href="Commande.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><span style="position: relative; display: flex;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"></path><path d="M9 8V6.5a3 3 0 0 1 6 0V8"></path></svg><span style="position: absolute; top: -4px; right: -10px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #D9301F; color: #FFFFFF; font-size: 11px; line-height: 18px; font-weight: 700; text-align: center;">3</span></span><span style="font-size: 10px; font-weight: 500;">Commande</span></a>
+<a href="Compte.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 49px; color: #6B6B6B; text-decoration: none;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg><span style="font-size: 10px; font-weight: 500;">Compte</span></a>
+</nav>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { chip: 'Tous' };
+  }
+  renderVals() {
+    var self = this;
+    var labels = ['Tous', 'Parfums', 'Soins', 'Maquillage', 'Disponibles'];
+    var chips = labels.map(function (l) {
+      var on = self.state.chip === l;
+      return {
+        label: l,
+        bg: on ? '#0A0A0A' : '#FFFFFF',
+        fg: on ? '#FFFFFF' : '#0A0A0A',
+        bd: on ? '#0A0A0A' : '#E5E5E5',
+        pick: function () { self.setState({ chip: l }); }
+      };
+    });
+    var products = [
+      { brand: 'Maison Lior', name: 'Ambre Nocturne, Eau de Parfum 100 ml', ref: 'ML-AN-100', price: '38,50 €', stock: '142 en stock', ok: true, low: false, out: false, tall: true, round: false, tube: false },
+      { brand: 'Atelier Sorel', name: 'Vétiver Gris, Eau de Toilette 50 ml', ref: 'AS-VG-050', price: '29,90 €', stock: '86 en stock', ok: true, low: false, out: false, tall: false, round: true, tube: false },
+      { brand: 'Botanica Paris', name: 'Crème Mains Iris 75 ml', ref: 'BP-CMI-075', price: '7,20 €', stock: 'Plus que 4', ok: false, low: true, out: false, tall: false, round: false, tube: true },
+      { brand: 'Atelier Sorel', name: 'Musc Blanc, Eau de Parfum 30 ml', ref: 'AS-MB-030', price: '21,00 €', stock: '', ok: false, low: false, out: true, tall: false, round: true, tube: false },
+      { brand: 'Maison Lior', name: 'Rose Poudrée, Eau de Parfum 75 ml', ref: 'ML-RP-075', price: '34,00 €', stock: '57 en stock', ok: true, low: false, out: false, tall: true, round: false, tube: false },
+      { brand: 'Botanica Paris', name: 'Lait Corps Néroli 200 ml', ref: 'BP-LCN-200', price: '9,80 €', stock: '210 en stock', ok: true, low: false, out: false, tall: false, round: false, tube: true }
+    ];
+    return { chips: chips, products: products };
+  }
+}
+</script>
+</body>
+</html>
