@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import type { OrderStatus } from '@emd/shared';
 import type { Banner } from '@/components/BannerCard';
@@ -110,5 +111,28 @@ export function useHome() {
       reload();
     }, [reload]),
   );
+  // Encarts modifiés dans le back-office : relecture immédiate (Realtime), regroupée car une
+  // sauvegarde touche plusieurs tables ; et au retour sur l'app (les dates d'un encart programmé).
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const soon = () => {
+      clearTimeout(timer);
+      timer = setTimeout(reload, 400);
+    };
+    const channel = supabase
+      .channel('home-banners')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'content_versions', filter: 'key=eq.banners' },
+        soon,
+      )
+      .subscribe();
+    const app = AppState.addEventListener('change', (s) => s === 'active' && reload());
+    return () => {
+      clearTimeout(timer);
+      supabase.removeChannel(channel);
+      app.remove();
+    };
+  }, [reload]);
   return { data, state, reload };
 }

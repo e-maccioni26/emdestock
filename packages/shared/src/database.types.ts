@@ -139,6 +139,20 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"content_versions": {
+                  Row: {
+                    "key": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "key": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "key"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"order_counters": {
                   Row: {
                     "last_value": number,"year": number

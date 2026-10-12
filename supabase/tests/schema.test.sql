@@ -268,6 +268,23 @@ select is((select count(*) from product_exclusions)::int, 0, 'exclusions retiré
 select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
 select is((select count(*) from products where reference = 'T-AN-100')::int, 1, 'produit de nouveau visible');
 
+-- Mise à jour en direct des encarts (content_versions)
+reset role;
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+insert into banners (theme, eyebrow, title, cta_label, target_type, audience, starts_at, ends_at, position)
+  values ('encre', 'T', 'Encart version', 'Voir', 'selection', 'all', now() - interval '1 day', now() + interval '1 day', 99);
+select ok((select updated_at from content_versions where key = 'banners') is not null, 'créer un encart incrémente la version');
+create temp table v1 as select updated_at as t from content_versions where key = 'banners';
+update banners set title = 'Encart version 2' where title = 'Encart version';
+select ok((select updated_at from content_versions where key = 'banners') > (select t from v1), 'modifier un encart fait avancer la version');
+create temp table v2 as select updated_at as t from content_versions where key = 'banners';
+delete from banners where title = 'Encart version 2';
+select ok((select updated_at from content_versions where key = 'banners') > (select t from v2), 'supprimer un encart fait avancer la version');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from content_versions where key = 'banners')::int, 1, 'un client actif lit la version');
+select is(pg_temp.sql_state_msg($q$update content_versions set updated_at = now()$q$), 'permission denied for table content_versions',
+  'le client ne peut pas modifier la version');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

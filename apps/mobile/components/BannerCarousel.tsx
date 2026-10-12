@@ -19,6 +19,14 @@ export function BannerCarousel({
   const [index, setIndex] = useState(0);
   const [touched, setTouched] = useState(false);
 
+  // Liste modifiée en direct : revenir au premier encart si l'index n'existe plus.
+  useEffect(() => {
+    if (index >= banners.length) {
+      setIndex(0);
+      list.current?.scrollToOffset({ offset: 0, animated: false });
+    }
+  }, [banners.length, index]);
+
   useEffect(() => {
     if (touched || banners.length < 2) return;
     const t = setInterval(() => {
