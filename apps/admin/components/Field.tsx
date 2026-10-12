@@ -17,7 +17,7 @@ export function Field({ label, error, mono, id, className = '', ...props }: Prop
         id={fieldId}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${fieldId}-error` : undefined}
-        className={`h-10 rounded-control border bg-white px-3.5 text-[14px] outline-none focus:border-ink focus:shadow-[0_0_0_1px_#0a0a0a] ${
+        className={`h-11 rounded-control border bg-white md:h-10 px-3.5 text-[14px] outline-none focus:border-ink focus:shadow-[0_0_0_1px_#0a0a0a] ${
           error ? 'border-error' : 'border-border'
         } ${mono ? 'font-mono' : ''} ${className}`}
         {...props}

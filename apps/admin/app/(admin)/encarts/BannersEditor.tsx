@@ -216,9 +216,9 @@ export function BannersEditor({
   const activeCount = banners.filter((b) => bannerStatus(b) === 'active').length;
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
+      <header className="flex shrink-0 flex-col gap-3 px-5 pt-1 pb-3 md:h-[76px] md:flex-row md:items-center md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
-          <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
             Encarts d’accueil
           </h1>
           <p className="text-[13px] leading-[18px] text-text-secondary">
@@ -231,7 +231,7 @@ export function BannersEditor({
         </Button>
       </header>
 
-      <div className="grid grid-cols-[330px_minmax(0,1fr)_320px] items-start gap-6 px-8 pt-7 pb-8">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8 lg:grid-cols-[330px_minmax(0,1fr)] xl:grid-cols-[330px_minmax(0,1fr)_320px]">
         <section className="flex flex-col gap-1 rounded-block border border-border bg-white p-2">
           <div className="flex items-baseline justify-between px-3 pt-3 pb-2">
             <h2 className="text-[16px] leading-[22px] font-semibold">Ordre d’affichage</h2>
@@ -276,13 +276,13 @@ export function BannersEditor({
                   </span>
                 </button>
                 <StatusPill status={bannerStatus(b)} />
-                <span className="flex flex-col">
+                <span className="flex md:flex-col">
                   <button
                     type="button"
                     aria-label="Monter"
                     disabled={pending || i === 0}
                     onClick={() => move(i, -1)}
-                    className="flex size-5 items-center justify-center disabled:opacity-30"
+                    className="flex size-11 items-center justify-center disabled:opacity-30 md:size-5"
                   >
                     <ArrowUp size={14} aria-hidden />
                   </button>
@@ -291,7 +291,7 @@ export function BannersEditor({
                     aria-label="Descendre"
                     disabled={pending || i === banners.length - 1}
                     onClick={() => move(i, 1)}
-                    className="flex size-5 items-center justify-center disabled:opacity-30"
+                    className="flex size-11 items-center justify-center disabled:opacity-30 md:size-5"
                   >
                     <ArrowDown size={14} aria-hidden />
                   </button>
@@ -310,7 +310,7 @@ export function BannersEditor({
           </p>
         </section>
 
-        <section className="flex min-w-0 flex-col gap-[18px] rounded-block border border-border bg-white p-6">
+        <section className="flex min-w-0 flex-col gap-[18px] rounded-block border border-border bg-white p-4 md:p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-[16px] leading-[22px] font-semibold">
               {draft.id ? 'Modifier l’encart' : 'Nouvel encart'}
@@ -520,7 +520,7 @@ export function BannersEditor({
           </div>
         </section>
 
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-3 lg:col-span-2 xl:col-span-1">
           <span className="self-start text-[13px] font-medium text-text-secondary">
             Aperçu dans l’app
           </span>

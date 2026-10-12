@@ -20,7 +20,7 @@ export function ClientSearch({ q }: { q: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text]);
   return (
-    <label className="flex h-10 w-[340px] items-center gap-2 rounded-control bg-stone px-3 text-text-secondary">
+    <label className="flex h-11 items-center lg:h-10 lg:w-[340px] gap-2 rounded-control bg-stone px-3 text-text-secondary">
       <Search size={20} strokeWidth={1.6} aria-hidden />
       <input
         type="search"

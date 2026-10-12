@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { LOW_STOCK_THRESHOLD, formatEuro, formatNumber } from '@emd/shared';
 import { requireAdmin } from '@/lib/auth';
+import { tabClass, tabCount, tabsWrap } from '@/components/tabs';
 import { StockBadge } from '@/components/Badge';
 import { ProductImage } from '@/components/ProductImage';
 import { ProductFilters } from './ProductFilters';
@@ -81,9 +82,9 @@ export default async function Produits({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
+      <header className="flex shrink-0 flex-col gap-3 px-5 pt-1 pb-3 md:h-[76px] md:flex-row md:items-center md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
-          <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
             Produits &amp; stocks
           </h1>
           <p className="text-[13px] leading-[18px] text-text-secondary">
@@ -92,26 +93,24 @@ export default async function Produits({ searchParams }: { searchParams: Promise
         </div>
         <Link
           href="/produits/nouveau"
-          className="inline-flex h-10 items-center gap-2 rounded-control bg-ink px-4 text-[14px] font-semibold text-white"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-control bg-ink px-4 text-[14px] font-semibold text-white md:h-10"
         >
           <Plus size={20} strokeWidth={1.6} aria-hidden />
           Ajouter un produit
         </Link>
       </header>
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
-        <div role="tablist" className="flex gap-1 border-b border-border">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
+        <div role="tablist" className={tabsWrap}>
           {TABS.map(([k, label], i) => (
             <Link
               key={k}
               role="tab"
               aria-selected={tab === k}
               href={href({ tab: k, page: '1' })}
-              className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-[14px] ${tab === k ? 'border-ink font-semibold text-ink' : 'border-transparent font-medium text-text-body'}`}
+              className={tabClass(tab === k)}
             >
               {label}
-              <span className="text-[12px] font-medium text-text-secondary tabular-nums">
-                {formatNumber(counts[i] ?? 0)}
-              </span>
+              <span className={tabCount(tab === k)}>{formatNumber(counts[i] ?? 0)}</span>
             </Link>
           ))}
         </div>
@@ -125,11 +124,11 @@ export default async function Produits({ searchParams }: { searchParams: Promise
         <div
           role="table"
           aria-label="Produits"
-          className="overflow-hidden rounded-block border border-border bg-white"
+          className="flex flex-col gap-2.5 lg:block lg:overflow-hidden lg:rounded-block lg:border lg:border-border lg:bg-white"
         >
           <div
             role="row"
-            className="grid h-11 grid-cols-[minmax(0,1fr)_104px_128px_84px_150px_64px] items-center gap-4 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary"
+            className="hidden h-11 lg:grid grid-cols-[minmax(0,1fr)_104px_128px_84px_150px_64px] items-center gap-4 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary"
           >
             <span role="columnheader">Produit</span>
             <span role="columnheader">Réf.</span>
@@ -149,7 +148,7 @@ export default async function Produits({ searchParams }: { searchParams: Promise
             <div
               key={r.id}
               role="row"
-              className={`grid h-[60px] grid-cols-[minmax(0,1fr)_104px_128px_84px_150px_64px] items-center gap-4 border-b border-divider px-5 ${r.is_visible ? '' : 'opacity-60'}`}
+              className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-card border border-border px-4 py-3.5 lg:h-[60px] lg:grid-cols-[minmax(0,1fr)_104px_128px_84px_150px_64px] lg:gap-4 lg:rounded-none lg:border-0 lg:border-b lg:border-divider lg:px-5 lg:py-0 ${r.is_visible ? '' : 'opacity-60'}`}
             >
               <Link
                 role="cell"
@@ -164,24 +163,37 @@ export default async function Produits({ searchParams }: { searchParams: Promise
                   className="shrink-0"
                 />
                 <span className="flex min-w-0 flex-col">
-                  <span className="truncate text-[14px] font-medium">{r.title}</span>
+                  <span className="line-clamp-2 text-[14px] font-medium lg:block lg:truncate">
+                    {r.title}
+                  </span>
                   <span className="text-[12px] text-text-secondary">{r.brands?.name}</span>
                 </span>
               </Link>
-              <span role="cell" className="font-mono text-[12px]">
+              <span
+                role="cell"
+                className="font-mono text-[12px] max-lg:col-start-1 max-lg:row-start-2"
+              >
                 {r.reference}
               </span>
-              <span role="cell" className="font-mono text-[12px]">
+              <span role="cell" className="hidden font-mono text-[12px] lg:block">
                 {r.ean}
               </span>
-              <span role="cell" className="text-right text-[14px] tabular-nums">
+              <span
+                role="cell"
+                className="text-right text-[14px] tabular-nums max-lg:col-start-2 max-lg:row-start-2"
+              >
                 {formatEuro(r.price_ht)}
               </span>
-              <span role="cell" className="flex items-center gap-2">
-                <span className="w-8 text-right text-[14px] tabular-nums">{r.stock}</span>
+              <span
+                role="cell"
+                className="flex items-center gap-2 max-lg:col-span-2 max-lg:row-start-3"
+              >
+                <span className="w-8 text-right max-lg:w-auto text-[14px] tabular-nums">
+                  {r.stock}
+                </span>
                 <StockBadge stock={r.stock} />
               </span>
-              <span role="cell">
+              <span role="cell" className="max-lg:col-start-2 max-lg:row-start-1">
                 <VisibilitySwitch id={r.id} visible={r.is_visible} title={r.title} />
               </span>
             </div>
@@ -199,7 +211,7 @@ export default async function Produits({ searchParams }: { searchParams: Promise
               {page > 1 && (
                 <Link
                   href={href({ page: String(page - 1) })}
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-3 font-semibold text-ink"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong px-3 font-semibold text-ink lg:h-9"
                 >
                   Précédent
                 </Link>
@@ -207,7 +219,7 @@ export default async function Produits({ searchParams }: { searchParams: Promise
               {page < pages && (
                 <Link
                   href={href({ page: String(page + 1) })}
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-3 font-semibold text-ink"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong px-3 font-semibold text-ink lg:h-9"
                 >
                   Suivant
                 </Link>

@@ -50,8 +50,9 @@ export const EMPTY: ProductValues = {
 
 const area =
   'rounded-control border bg-white px-3 py-2.5 text-[14px] leading-[21px] outline-none focus:border-ink focus:shadow-[0_0_0_1px_#0a0a0a] resize-none';
-const selectClass = 'h-10 w-full rounded-control border border-border bg-white px-3 text-[14px]';
-const card = 'flex flex-col gap-4 rounded-block border border-border bg-white p-6';
+const selectClass =
+  'h-11 md:h-10 w-full rounded-control border border-border bg-white px-3 text-[14px]';
+const card = 'flex flex-col gap-4 rounded-block border border-border bg-white p-4 md:p-6';
 
 export function ProductForm({
   id,
@@ -123,15 +124,15 @@ export function ProductForm({
   const stock = Number(v.stock);
   return (
     <form action={action}>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
-        <div className="flex min-w-0 grow flex-col gap-0.5">
+      <header className="flex shrink-0 flex-wrap items-center gap-3 px-5 pt-1 pb-3 md:h-[76px] md:flex-nowrap md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
+        <div className="flex min-w-0 basis-full flex-col gap-0.5 md:grow md:basis-auto">
           <Link
             href="/produits"
             className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary"
           >
             <ChevronLeft size={14} strokeWidth={2} aria-hidden /> Produits &amp; stocks
           </Link>
-          <h1 className="truncate text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="truncate text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
             {v.title || 'Nouveau produit'}
           </h1>
         </div>
@@ -150,28 +151,29 @@ export function ProductForm({
               startDelete(async () => setDeleteError((await deleteProduct(id))?.error));
             }}
           >
-            <Trash2 size={20} strokeWidth={1.6} aria-hidden /> Supprimer
+            <Trash2 size={20} strokeWidth={1.6} aria-hidden />
+            <span className="max-md:hidden">Supprimer</span>
           </Button>
         )}
         <Link
           href="/produits"
-          className="inline-flex h-10 items-center rounded-control border border-border-strong bg-white px-4 text-[14px] font-semibold"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-control border border-border-strong bg-white px-4 text-[14px] font-semibold md:h-10 md:flex-none"
         >
           Annuler
         </Link>
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending} className="max-md:flex-1">
           {pending ? 'Enregistrement…' : 'Enregistrer'}
         </Button>
       </header>
 
-      <div className="flex flex-col gap-4 px-8 pt-7 pb-8">
+      <div className="flex flex-col gap-4 px-5 pt-2 pb-6 md:px-8 md:pt-7 md:pb-8">
         {(state.formError || deleteError) && (
           <p role="alert" className="text-[13px] text-error">
             {state.formError ?? deleteError}
           </p>
         )}
-        <div className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-6">
-          <div className="flex flex-col gap-6">
+        <div className="grid items-start gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+          <div className="flex flex-col gap-4 md:gap-6">
             <section className={card}>
               <h2 className="text-[16px] leading-[22px] font-semibold">Informations produit</h2>
               <Field label="Titre" {...input('title')} error={e.title} />
@@ -264,7 +266,7 @@ export function ProductForm({
 
             <section className={card}>
               <h2 className="text-[16px] leading-[22px] font-semibold">Prix et stock</h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 items-end gap-4">
                 <Field
                   label="Prix HT (€)"
                   inputMode="decimal"

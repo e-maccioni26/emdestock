@@ -15,6 +15,6 @@ export function Button({ variant = 'primary', small, className = '', ...props }:
       'rounded-control border border-border-strong bg-white px-4 text-ink disabled:bg-disabled-bg disabled:text-disabled-text',
     link: 'min-h-11 bg-transparent font-medium text-ink underline underline-offset-3',
   }[variant];
-  const height = variant === 'link' ? '' : small ? 'h-9' : 'h-10';
+  const height = variant === 'link' ? '' : small ? 'h-11 md:h-9' : 'h-11 md:h-10';
   return <button type="button" className={`${base} ${styles} ${height} ${className}`} {...props} />;
 }

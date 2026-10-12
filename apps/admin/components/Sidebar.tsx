@@ -34,7 +34,7 @@ export function Sidebar({
   const pathname = usePathname();
   const itemBase = 'flex h-10 items-center gap-3 rounded-control border px-3 text-[14px]';
   return (
-    <aside className="flex w-[248px] print:hidden shrink-0 flex-col gap-7 border-r border-border bg-surface-alt px-4 py-5">
+    <aside className="hidden w-[248px] print:hidden shrink-0 md:flex flex-col gap-7 border-r border-border bg-surface-alt px-4 py-5">
       <div className="flex items-center gap-2.5 px-2 py-1">
         <Image
           src="/logo-emd.jpg"

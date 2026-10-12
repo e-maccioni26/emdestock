@@ -18,7 +18,8 @@ import { PrintButton } from './PrintButton';
 import { StatusPanel } from './StatusPanel';
 
 const card = 'rounded-block border border-border bg-white';
-const cols = 'grid-cols-[minmax(0,1fr)_52px_84px_96px_104px]';
+const cols = 'tbl:grid-cols-[minmax(0,1fr)_52px_84px_96px_104px]';
+const label = 'block text-[11px] font-normal text-text-secondary tbl:hidden';
 
 type Event = {
   id: string;
@@ -96,7 +97,7 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
+      <header className="flex shrink-0 flex-col gap-2 px-5 pt-1 pb-3 md:h-[76px] md:flex-row md:items-center md:gap-3 md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
           <Link
             href="/commandes"
@@ -104,21 +105,21 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
           >
             <ChevronLeft size={14} strokeWidth={2} aria-hidden /> Commandes
           </Link>
-          <h1 className="font-mono text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="font-mono text-[22px] leading-[28px] font-semibold tracking-[-0.01em] md:text-[20px] md:leading-[26px]">
             {o.number}
           </h1>
         </div>
-        <span className="mr-2 text-[13px] text-text-secondary">
+        <span className="text-[13px] text-text-secondary md:mr-2">
           Reçue le {formatDateTimeLong(o.created_at)}
         </span>
         <PrintButton />
       </header>
 
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
-        <div className="grid grid-cols-[minmax(0,1fr)_360px] items-start gap-6 print:grid-cols-1">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
+        <div className="grid items-start gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_360px] print:grid-cols-1">
           <div className="flex flex-col gap-6">
             <div role="table" aria-label="Produits commandés" className={`${card} overflow-hidden`}>
-              <div className="flex items-baseline justify-between px-5 pt-5 pb-4">
+              <div className="flex items-baseline justify-between gap-3 px-4 pt-4 pb-3 md:px-5 md:pt-5 md:pb-4">
                 <h2 className="text-[16px] leading-[22px] font-semibold">Produits commandés</h2>
                 <span className="text-[13px] text-text-secondary">
                   {o.order_items.length} références · {formatNumber(o.units)} unités
@@ -126,7 +127,7 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
               </div>
               <div
                 role="row"
-                className={`grid h-10 ${cols} items-center gap-4 border-y border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
+                className={`hidden h-10 tbl:grid ${cols} items-center gap-4 border-y border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
               >
                 <span role="columnheader">Produit</span>
                 <span role="columnheader" className="text-right">
@@ -148,9 +149,12 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
                   <div
                     key={i.id}
                     role="row"
-                    className={`grid h-[68px] ${cols} items-center gap-4 border-b border-divider px-5`}
+                    className={`grid grid-cols-4 items-center gap-x-2 gap-y-2.5 border-t border-divider px-4 py-3 md:px-5 tbl:h-[68px] tbl:gap-4 tbl:border-t-0 tbl:border-b tbl:py-0 ${cols}`}
                   >
-                    <div role="cell" className="flex min-w-0 items-center gap-3">
+                    <div
+                      role="cell"
+                      className="col-span-4 flex min-w-0 items-center gap-3 tbl:col-auto"
+                    >
                       <ProductImage
                         product={i.products ?? {}}
                         title={i.title}
@@ -167,12 +171,15 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
                       </div>
                     </div>
                     <span role="cell" className="text-right text-[14px] font-semibold tabular-nums">
+                      <span className={label}>Qté</span>
                       {i.quantity}
                     </span>
                     <span role="cell" className="text-right text-[14px] tabular-nums">
+                      <span className={label}>Prix HT</span>
                       {formatEuro(i.unit_price_ht)}
                     </span>
                     <span role="cell" className="text-right text-[14px] font-semibold tabular-nums">
+                      <span className={label}>Total HT</span>
                       {formatEuro(i.line_total_ht)}
                     </span>
                     <span
@@ -184,12 +191,13 @@ export default async function CommandeDetail({ params }: { params: Promise<{ id:
                           : undefined
                       }
                     >
+                      <span className={label}>Stock</span>
                       {stock ?? '—'}
                     </span>
                   </div>
                 );
               })}
-              <div className="flex items-baseline justify-end gap-6 px-5 py-4">
+              <div className="flex items-baseline justify-between gap-6 border-t border-divider px-4 py-4 md:px-5 tbl:justify-end tbl:border-t-0">
                 <span className="text-[14px] text-text-secondary">Total estimé</span>
                 <span className="text-[20px] font-semibold tabular-nums">
                   {formatEuro(o.total_ht)}{' '}

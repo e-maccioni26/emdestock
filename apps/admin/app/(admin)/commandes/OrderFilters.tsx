@@ -13,7 +13,7 @@ export const PERIODS = [
 ] as const;
 
 const box =
-  'h-10 w-[200px] rounded-control border border-border bg-white px-3 text-[14px] text-ink';
+  'h-11 w-full min-w-0 rounded-control border border-border bg-white px-3 text-[14px] text-ink lg:h-10 lg:w-[200px]';
 
 export function OrderFilters({
   q,
@@ -53,8 +53,8 @@ export function OrderFilters({
 
   const visibleStores = company ? stores.filter((s) => s.company_id === company) : stores;
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <label className="flex h-10 w-[320px] items-center gap-2 rounded-control bg-stone px-3 text-text-secondary">
+    <div className="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap lg:items-center lg:gap-3">
+      <label className="col-span-2 flex h-11 items-center gap-2 lg:h-10 lg:w-[320px] rounded-control bg-stone px-3 text-text-secondary">
         <Search size={20} strokeWidth={1.6} aria-hidden />
         <input
           type="search"
@@ -91,13 +91,13 @@ export function OrderFilters({
           </option>
         ))}
       </select>
-      <label className="flex h-10 items-center gap-2 rounded-control border border-border bg-white px-3 text-[14px]">
+      <label className="col-span-2 flex h-11 items-center gap-2 rounded-control border border-border bg-white px-3 text-[14px] lg:h-10">
         <Calendar size={20} strokeWidth={1.6} aria-hidden />
         <select
           aria-label="Période"
           value={period}
           onChange={(e) => update({ period: e.target.value })}
-          className="bg-transparent outline-none"
+          className="min-w-0 grow bg-transparent outline-none"
         >
           {PERIODS.map(([k, label]) => (
             <option key={k} value={k}>

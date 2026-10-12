@@ -6,9 +6,34 @@
     "orientation": "portrait",
     "scheme": "emd-destock",
     "userInterfaceStyle": "light",
-    "ios": { "bundleIdentifier": "fr.emddestock.app", "supportsTablet": false },
-    "web": { "output": "single", "bundler": "metro" },
-    "plugins": ["expo-router", "expo-font"],
-    "experiments": { "typedRoutes": true }
+    "ios": {
+      "bundleIdentifier": "fr.emddestock.app",
+      "supportsTablet": false,
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "web": {
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "icon": "./assets/icon.png"
   }
 }

@@ -1,6 +1,16 @@
 @import 'tailwindcss';
 
 /* Miroir de design/tokens.json (CSS ne peut pas importer le JSON) : toute valeur ajoutée ici doit exister dans les tokens. */
+/* Tableau (≥ 1024 px et impression) ou cartes (téléphone, tablette étroite). */
+@custom-variant tbl {
+  @media (min-width: 64rem) {
+    @slot;
+  }
+  @media print {
+    @slot;
+  }
+}
+
 @theme {
   --color-ink: #0a0a0a;
   --color-stone: #f4f4f3;

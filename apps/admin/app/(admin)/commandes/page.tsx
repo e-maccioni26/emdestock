@@ -1,8 +1,15 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { formatEuro, formatNumber, formatShortDateTime, type OrderStatus } from '@emd/shared';
+import {
+  formatEuro,
+  formatNumber,
+  formatRelative,
+  formatShortDateTime,
+  type OrderStatus,
+} from '@emd/shared';
 import { requireAdmin } from '@/lib/auth';
 import { StatusBadge } from '@/components/Badge';
+import { tabClass, tabCount, tabsWrap } from '@/components/tabs';
 import { OrderFilters } from './OrderFilters';
 
 const PAGE_SIZE = 10; // SPEC §2
@@ -96,33 +103,34 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
     return `/commandes${s ? `?${s}` : ''}`;
   };
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const cols = 'grid-cols-[112px_104px_minmax(0,1.3fr)_minmax(0,1fr)_44px_56px_104px_132px_16px]';
+  const cols =
+    'lg:grid-cols-[112px_104px_minmax(0,1.3fr)_minmax(0,1fr)_44px_56px_104px_132px_16px]';
   const from = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
+      <header className="flex shrink-0 items-center gap-3 px-5 pt-1 pb-3 md:h-[76px] md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
-          <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">Commandes</h1>
+          <h1 className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
+            Commandes
+          </h1>
           <p className="text-[13px] leading-[18px] text-text-secondary">
             {formatNumber(counts[1] ?? 0)} à traiter · {formatNumber(counts[0] ?? 0)} sur la période
           </p>
         </div>
       </header>
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
-        <div role="tablist" className="flex gap-1 border-b border-border">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
+        <div role="tablist" className={tabsWrap}>
           {TABS.map(([k, label], i) => (
             <Link
               key={k}
               role="tab"
               aria-selected={tab === k}
               href={href({ tab: k, page: '1' })}
-              className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-[14px] ${tab === k ? 'border-ink font-semibold text-ink' : 'border-transparent font-medium text-text-body'}`}
+              className={tabClass(tab === k)}
             >
               {label}
-              <span className="text-[12px] font-medium text-text-secondary tabular-nums">
-                {formatNumber(counts[i] ?? 0)}
-              </span>
+              <span className={tabCount(tab === k)}>{formatNumber(counts[i] ?? 0)}</span>
             </Link>
           ))}
         </div>
@@ -139,11 +147,11 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
         <div
           role="table"
           aria-label="Commandes"
-          className="overflow-hidden rounded-block border border-border bg-white"
+          className="flex flex-col gap-2.5 lg:block lg:overflow-hidden lg:rounded-block lg:border lg:border-border lg:bg-white"
         >
           <div
             role="row"
-            className={`grid h-11 ${cols} items-center gap-3 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
+            className={`hidden h-11 lg:grid ${cols} items-center gap-3 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
           >
             <span role="columnheader">N°</span>
             <span role="columnheader">Date</span>
@@ -162,7 +170,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
             <span role="columnheader" />
           </div>
           {(rows ?? []).length === 0 && (
-            <p className="px-12 py-12 text-center text-[14px] text-text-secondary">
+            <p className="px-6 py-12 text-center text-[14px] text-text-secondary">
               Aucune commande ne correspond à ces critères.
             </p>
           )}
@@ -173,7 +181,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
                 key={r.id}
                 role="row"
                 href={`/commandes/${r.id}`}
-                className={`grid h-14 ${cols} items-center gap-3 border-b border-divider px-5 ${unseen ? 'bg-surface-alt' : 'bg-white'}`}
+                className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-card border border-border px-4 py-3.5 lg:h-14 lg:rounded-none lg:border-0 lg:border-b lg:border-divider lg:px-5 lg:py-0 ${cols} ${unseen ? 'bg-surface-alt' : 'bg-white'}`}
               >
                 <span
                   role="cell"
@@ -181,42 +189,57 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
                 >
                   <span
                     aria-hidden
-                    className={`size-1.5 rounded-full ${unseen ? 'bg-brand-red' : 'bg-transparent'}`}
+                    className={`size-1.5 rounded-full ${unseen ? 'bg-brand-red' : 'bg-transparent max-lg:hidden'}`}
                   />
                   {unseen && <span className="sr-only">Non consultée, </span>}
                   {r.number}
                 </span>
-                <span role="cell" className="text-[13px] text-text-body tabular-nums">
+                <span
+                  role="cell"
+                  className="hidden text-[13px] text-text-body tabular-nums lg:block"
+                >
                   {formatShortDateTime(r.created_at)}
                 </span>
-                <span role="cell" className="truncate text-[14px] font-medium">
+                <span
+                  role="cell"
+                  className="col-start-1 row-start-2 truncate text-[15px] font-semibold lg:col-auto lg:row-auto lg:text-[14px] lg:font-medium"
+                >
                   {r.companies?.legal_name}
                 </span>
-                <span role="cell" className="truncate text-[14px] text-text-body">
+                <span role="cell" className="hidden truncate text-[14px] text-text-body lg:block">
                   {r.stores?.name}
                 </span>
-                <span role="cell" className="text-right text-[14px] tabular-nums">
+                <span role="cell" className="hidden text-right text-[14px] tabular-nums lg:block">
                   {r.order_items[0]?.count ?? 0}
                 </span>
-                <span role="cell" className="text-right text-[14px] tabular-nums">
+                <span role="cell" className="hidden text-right text-[14px] tabular-nums lg:block">
                   {r.units}
                 </span>
-                <span role="cell" className="text-right text-[14px] font-semibold tabular-nums">
+                <span
+                  role="cell"
+                  className="col-start-2 row-span-2 row-start-2 self-end text-right text-[16px] font-semibold tabular-nums lg:col-auto lg:row-auto lg:self-auto lg:text-[14px]"
+                >
                   {formatEuro(r.total_ht)}
                 </span>
-                <span role="cell">
+                <span
+                  role="cell"
+                  className="col-start-2 row-start-1 justify-self-end lg:col-auto lg:row-auto"
+                >
                   <StatusBadge status={r.status as OrderStatus} />
+                </span>
+                <span className="col-start-1 row-start-3 text-[12px] leading-4 text-text-secondary lg:hidden">
+                  {r.stores?.name} · {r.units} u. · {formatRelative(r.created_at)}
                 </span>
                 <ChevronRight
                   size={16}
                   strokeWidth={1.8}
-                  className="text-text-secondary"
+                  className="hidden text-text-secondary lg:block"
                   aria-hidden
                 />
               </Link>
             );
           })}
-          <div className="flex h-14 items-center justify-between px-5">
+          <div className="flex h-14 items-center justify-between lg:px-5">
             <span className="text-[13px] text-text-secondary tabular-nums">
               {total === 0
                 ? '0 commande'
@@ -226,14 +249,14 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
               {page > 1 ? (
                 <Link
                   href={href({ page: String(page - 1) })}
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-4 text-[14px] font-semibold"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong lg:h-9 px-4 text-[14px] font-semibold"
                 >
                   Précédent
                 </Link>
               ) : (
                 <span
                   aria-disabled
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-4 text-[14px] font-semibold text-disabled-text"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong lg:h-9 px-4 text-[14px] font-semibold text-disabled-text"
                 >
                   Précédent
                 </span>
@@ -241,14 +264,14 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
               {page < pages ? (
                 <Link
                   href={href({ page: String(page + 1) })}
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-4 text-[14px] font-semibold"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong lg:h-9 px-4 text-[14px] font-semibold"
                 >
                   Suivant
                 </Link>
               ) : (
                 <span
                   aria-disabled
-                  className="inline-flex h-9 items-center rounded-control border border-border-strong px-4 text-[14px] font-semibold text-disabled-text"
+                  className="inline-flex h-11 items-center rounded-control border border-border-strong lg:h-9 px-4 text-[14px] font-semibold text-disabled-text"
                 >
                   Suivant
                 </span>

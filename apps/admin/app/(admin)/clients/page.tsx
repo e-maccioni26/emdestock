@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import { formatDayMonth, formatEuro, formatNumber, formatSiret } from '@emd/shared';
 import { requireAdmin } from '@/lib/auth';
+import { tabClass, tabCount, tabsWrap } from '@/components/tabs';
 import { PageHeader } from '@/components/PageHeader';
 import { ClientSearch } from './ClientSearch';
 import { RequestList, type SignupRequest } from './RequestList';
@@ -44,27 +45,25 @@ export default async function Clients({
     ['demandes', 'Demandes d’inscription', requests.length],
     ['actifs', 'Clients actifs', activeCount ?? 0],
   ];
-  const cols = 'grid-cols-[minmax(0,1.5fr)_150px_80px_96px_120px_124px_16px]';
+  const cols = 'lg:grid-cols-[minmax(0,1.5fr)_150px_80px_96px_120px_124px_16px]';
   return (
     <>
       <PageHeader
         title="Clients"
         subtitle={`${formatNumber(activeCount ?? 0)} clients actifs · ${requests.length} ${requests.length > 1 ? 'demandes' : 'demande'} en attente`}
       />
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
-        <div role="tablist" className="flex gap-1 border-b border-border">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
+        <div role="tablist" className={tabsWrap}>
           {tabs.map(([k, label, n]) => (
             <Link
               key={k}
               role="tab"
               aria-selected={tab === k}
               href={k === 'demandes' ? '/clients' : '/clients?tab=actifs'}
-              className={`-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 text-[14px] ${tab === k ? 'border-ink font-semibold text-ink' : 'border-transparent font-medium text-text-body'}`}
+              className={tabClass(tab === k)}
             >
               {label}
-              <span className="text-[12px] font-medium text-text-secondary tabular-nums">
-                {formatNumber(n)}
-              </span>
+              <span className={tabCount(tab === k)}>{formatNumber(n)}</span>
             </Link>
           ))}
         </div>
@@ -76,11 +75,11 @@ export default async function Clients({
             <div
               role="table"
               aria-label="Clients actifs"
-              className="overflow-hidden rounded-block border border-border bg-white"
+              className="flex flex-col gap-2.5 lg:block lg:overflow-hidden lg:rounded-block lg:border lg:border-border lg:bg-white"
             >
               <div
                 role="row"
-                className={`grid h-11 ${cols} items-center gap-4 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
+                className={`hidden h-11 lg:grid ${cols} items-center gap-4 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
               >
                 <span role="columnheader">Client</span>
                 <span role="columnheader">SIRET</span>
@@ -106,7 +105,7 @@ export default async function Clients({
                   key={c.id}
                   role="row"
                   href={`/clients/${c.id}`}
-                  className={`grid h-[60px] ${cols} items-center gap-4 border-b border-divider px-5`}
+                  className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-card border border-border px-4 py-3.5 lg:h-[60px] lg:gap-4 lg:rounded-none lg:border-0 lg:border-b lg:border-divider lg:px-5 lg:py-0 ${cols}`}
                 >
                   <span role="cell" className="flex min-w-0 flex-col">
                     <span className="flex items-center gap-2 truncate text-[14px] font-medium">
@@ -119,25 +118,33 @@ export default async function Clients({
                     </span>
                     <span className="text-[12px] text-text-secondary">{c.contact_name}</span>
                   </span>
-                  <span role="cell" className="font-mono text-[12px]">
+                  <span role="cell" className="hidden font-mono text-[12px] lg:block">
                     {formatSiret(c.siret)}
                   </span>
-                  <span role="cell" className="text-right text-[14px] tabular-nums">
+                  <span role="cell" className="hidden text-right text-[14px] tabular-nums lg:block">
                     {c.stores}
                   </span>
-                  <span role="cell" className="text-right text-[14px] tabular-nums">
+                  <span role="cell" className="hidden text-right text-[14px] tabular-nums lg:block">
                     {c.orders}
                   </span>
-                  <span role="cell" className="text-[13px] text-text-body">
+                  <span role="cell" className="hidden text-[13px] text-text-body lg:block">
                     {c.last_order_at ? formatDayMonth(c.last_order_at) : '—'}
                   </span>
-                  <span role="cell" className="text-right text-[14px] font-semibold tabular-nums">
+                  <span
+                    role="cell"
+                    className="text-right text-[14px] font-semibold tabular-nums max-lg:row-span-2 max-lg:self-center"
+                  >
                     {formatEuro(c.total_ht)}
+                  </span>
+                  <span className="col-start-1 text-[12px] text-text-secondary lg:hidden">
+                    {c.stores} magasin{c.stores > 1 ? 's' : ''} · {c.orders} commande
+                    {c.orders > 1 ? 's' : ''}
+                    {c.last_order_at ? ` · ${formatDayMonth(c.last_order_at)}` : ''}
                   </span>
                   <ChevronRight
                     size={16}
                     strokeWidth={1.8}
-                    className="text-text-secondary"
+                    className="hidden text-text-secondary lg:block"
                     aria-hidden
                   />
                 </Link>

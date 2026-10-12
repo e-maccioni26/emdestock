@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
 const selectClass =
-  'h-10 w-[200px] rounded-control border border-border bg-white px-3 text-[14px] text-ink';
+  'h-11 w-full min-w-0 rounded-control border border-border bg-white px-3 text-[14px] text-ink lg:h-10 lg:w-[200px]';
 
 export function ProductFilters({
   q,
@@ -41,8 +41,8 @@ export function ProductFilters({
   }, [text]);
 
   return (
-    <div className="flex items-center gap-3">
-      <label className="flex h-10 w-[340px] items-center gap-2 rounded-control bg-stone px-3 text-text-secondary">
+    <div className="grid grid-cols-2 gap-2 lg:flex lg:items-center lg:gap-3">
+      <label className="col-span-2 flex h-11 items-center gap-2 rounded-control lg:h-10 lg:w-[340px] bg-stone px-3 text-text-secondary">
         <Search size={20} strokeWidth={1.6} aria-hidden />
         <input
           type="search"

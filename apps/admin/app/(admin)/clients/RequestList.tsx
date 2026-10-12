@@ -62,7 +62,7 @@ export function RequestList({ initial }: { initial: SignupRequest[] }) {
         return (
           <article
             key={r.id}
-            className="grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_280px] items-center gap-6 rounded-block border border-border bg-white p-5"
+            className="grid items-center gap-4 rounded-block border border-border bg-white p-4 md:p-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_280px] lg:gap-6"
           >
             <div className="flex min-w-0 flex-col gap-1.5">
               <span className="text-[16px] font-semibold">{r.legalName}</span>
@@ -77,13 +77,13 @@ export function RequestList({ initial }: { initial: SignupRequest[] }) {
             </div>
             <div className="flex flex-col gap-1 text-[13px]">
               <span className="font-medium">{r.contact}</span>
-              <span className="text-text-secondary">{r.email}</span>
+              <span className="min-w-0 break-words text-text-secondary">{r.email}</span>
               <span className="text-text-secondary">{ago(r.createdAt)}</span>
             </div>
-            <div className="flex justify-end gap-2">
+            <div className="flex gap-2 *:flex-1 lg:justify-end lg:*:flex-none">
               {decision ? (
                 <span
-                  className={`inline-flex h-10 items-center text-[14px] font-semibold ${decision === 'active' ? 'text-success-fg' : 'text-error'}`}
+                  className={`inline-flex h-11 items-center text-[14px] font-semibold ${decision === 'active' ? 'text-success-fg' : 'text-error'}`}
                 >
                   {decision === 'active' ? 'Accès validé · e-mail envoyé' : 'Demande refusée'}
                 </span>

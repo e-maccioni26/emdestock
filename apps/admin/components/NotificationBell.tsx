@@ -85,13 +85,13 @@ export function NotificationBell({ initial }: { initial: Notification[] }) {
   }, [open, close]);
 
   return (
-    <div ref={panel} className="absolute top-[18px] right-8 z-20 print:hidden">
+    <div ref={panel} className="absolute top-2 right-5 z-20 md:top-[18px] md:right-8 print:hidden">
       <button
         type="button"
         aria-label={unread ? 'Notifications, non lues' : 'Notifications'}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="relative flex size-10 items-center justify-center rounded-control border border-border bg-white text-ink"
+        className="relative flex size-11 items-center md:size-10 justify-center rounded-control border border-border bg-white text-ink"
       >
         <Bell size={20} strokeWidth={1.6} aria-hidden />
         {unread && (
@@ -105,7 +105,7 @@ export function NotificationBell({ initial }: { initial: Notification[] }) {
         <div
           role="dialog"
           aria-label="Notifications"
-          className="absolute top-[50px] right-0 w-[380px] overflow-hidden rounded-block border border-border bg-white shadow-popover"
+          className="absolute top-[52px] -right-1 w-[calc(100vw-24px)] max-w-[380px] md:top-[50px] md:right-0 md:w-[380px] overflow-hidden rounded-block border border-border bg-white shadow-popover"
         >
           <div className="flex items-center justify-between px-4 py-3.5">
             <span className="text-[15px] font-semibold">Notifications</span>

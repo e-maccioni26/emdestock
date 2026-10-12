@@ -26,7 +26,7 @@ const PERIODS: [string, StatsPeriod, string][] = [
   ['mois', 'month', 'Mois'],
   ['annee', 'year', 'Année'],
 ];
-const card = 'rounded-block border border-border bg-white p-6';
+const card = 'rounded-block border border-border bg-white p-4 md:p-6';
 
 function Delta({ value, suffix }: { value: number | null; suffix?: string }) {
   const tone = deltaTone(value);
@@ -109,22 +109,26 @@ export default async function Dashboard({
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
+      <header className="flex shrink-0 flex-col gap-3 px-5 pt-1 pb-3 md:h-[76px] md:flex-row md:items-center md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
         <div className="flex min-w-0 grow flex-col gap-0.5">
-          <h1 className="text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
             Tableau de bord
           </h1>
           <p className="text-[13px] leading-[18px] text-text-secondary">
             {today.charAt(0).toUpperCase() + today.slice(1)}
           </p>
         </div>
-        <div role="group" aria-label="Période" className="flex rounded-control bg-stone p-[3px]">
+        <div
+          role="group"
+          aria-label="Période"
+          className="flex rounded-control bg-stone p-[3px] md:inline-flex"
+        >
           {PERIODS.map(([k, , label]) => (
             <Link
               key={k}
               href={k === 'mois' ? '/' : `/?p=${k}`}
               aria-current={slug === k ? 'true' : undefined}
-              className={`inline-flex h-[34px] items-center rounded-[8px] px-3.5 text-[13px] ${slug === k ? 'bg-white font-semibold text-ink shadow-[0_1px_2px_rgba(10,10,10,0.08)]' : 'font-medium text-text-body'}`}
+              className={`inline-flex h-11 flex-1 items-center justify-center rounded-[8px] px-3.5 text-[13px] md:h-[34px] md:flex-none ${slug === k ? 'bg-white font-semibold text-ink shadow-[0_1px_2px_rgba(10,10,10,0.08)]' : 'font-medium text-text-body'}`}
             >
               {label}
             </Link>
@@ -132,7 +136,7 @@ export default async function Dashboard({
         </div>
       </header>
 
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
         {error || !stats ? (
           <p role="alert" className="text-[14px] text-error">
             Impossible de charger les statistiques. Rechargez la page.
@@ -168,24 +172,24 @@ export default async function Dashboard({
               </div>
             )}
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
               {kpis.map((k) => (
                 <div
                   key={k.label}
-                  className="flex flex-col gap-2.5 rounded-block border border-border bg-white p-5"
+                  className="flex flex-col gap-2 rounded-block border border-border bg-white p-4 md:gap-2.5 md:p-5"
                 >
                   <span className="text-[13px] text-text-secondary">{k.label}</span>
                   <span className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] tabular-nums">
                     {k.v}
                   </span>
-                  <span className="flex items-center gap-2 text-[12px] text-text-secondary">
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-text-secondary">
                     <Delta value={k.d} suffix={k.abs ? '' : ' %'} /> vs période précédente
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] gap-4">
+            <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)]">
               <section className={`${card} flex min-w-0 flex-col gap-5`}>
                 <div className="flex items-baseline justify-between">
                   <h2 className="text-[16px] leading-[22px] font-semibold">Commandes reçues</h2>
@@ -228,13 +232,13 @@ export default async function Dashboard({
                     />
                     <div className="flex min-w-0 grow flex-col gap-1.5">
                       <div className="flex justify-between gap-2">
-                        <span className="truncate text-[14px] font-medium">{p.title}</span>
-                        <span className="text-[13px] font-semibold tabular-nums">
+                        <span className="min-w-0 truncate text-[14px] font-medium">{p.title}</span>
+                        <span className="shrink-0 text-[13px] font-semibold whitespace-nowrap tabular-nums">
                           {formatNumber(p.units)} u.
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="w-[76px] font-mono text-[11px] text-text-secondary">
+                        <span className="w-[76px] shrink-0 font-mono text-[11px] text-text-secondary">
                           {p.reference}
                         </span>
                         <span className="h-1 grow overflow-hidden rounded-full bg-divider">
@@ -250,7 +254,7 @@ export default async function Dashboard({
               </section>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-2">
               <section className={`${card} flex flex-col gap-3`}>
                 <div className="flex items-baseline justify-between">
                   <h2 className="text-[16px] leading-[22px] font-semibold">Activité par magasin</h2>
@@ -265,7 +269,7 @@ export default async function Dashboard({
                 <div role="table" aria-label="Activité par magasin">
                   <div
                     role="row"
-                    className="grid grid-cols-[minmax(0,1fr)_90px_120px] gap-4 border-b border-border pb-2.5 text-[12px] font-medium text-text-secondary"
+                    className="grid grid-cols-[minmax(0,1fr)_72px_96px] gap-3 border-b border-border pb-2.5 md:grid-cols-[minmax(0,1fr)_90px_120px] md:gap-4 text-[12px] font-medium text-text-secondary"
                   >
                     <span role="columnheader">Magasin</span>
                     <span role="columnheader" className="text-right">
@@ -284,7 +288,7 @@ export default async function Dashboard({
                     <div
                       key={s.id}
                       role="row"
-                      className="grid h-[52px] grid-cols-[minmax(0,1fr)_90px_120px] items-center gap-4 border-b border-divider"
+                      className="grid h-[52px] grid-cols-[minmax(0,1fr)_72px_96px] items-center gap-3 border-b border-divider md:grid-cols-[minmax(0,1fr)_90px_120px] md:gap-4"
                     >
                       <div role="cell" className="flex min-w-0 flex-col">
                         <span className="truncate text-[14px] font-medium">{s.name}</span>
@@ -322,9 +326,9 @@ export default async function Dashboard({
                   <Link
                     key={o.id}
                     href={`/commandes/${o.id}`}
-                    className="grid h-[52px] grid-cols-[minmax(0,1fr)_110px_130px] items-center gap-4 border-b border-divider"
+                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 border-b border-divider py-3 md:h-[52px] md:grid-cols-[minmax(0,1fr)_110px_130px] md:gap-4 md:py-0"
                   >
-                    <div className="flex min-w-0 flex-col">
+                    <div className="row-span-2 flex min-w-0 flex-col md:row-span-1">
                       <span className="font-mono text-[13px]">{o.number}</span>
                       <span className="truncate text-[12px] text-text-secondary">
                         {o.stores?.name} · {formatRelative(o.created_at)}

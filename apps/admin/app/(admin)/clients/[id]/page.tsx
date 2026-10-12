@@ -60,20 +60,20 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
       <span className="text-[20px] font-semibold tabular-nums">{value}</span>
     </div>
   );
-  const cols = 'grid-cols-[128px_minmax(0,1fr)_minmax(0,1fr)_120px_140px]';
+  const cols = 'lg:grid-cols-[128px_minmax(0,1fr)_minmax(0,1fr)_120px_140px]';
   const deleted = c.status === 'deleted';
 
   return (
     <>
-      <header className="flex h-[76px] shrink-0 items-center gap-3 border-b border-border pr-[88px] pl-8">
-        <div className="flex min-w-0 grow flex-col gap-0.5">
+      <header className="flex shrink-0 flex-col items-start gap-3 px-5 pt-1 pb-3 md:h-[76px] md:flex-row md:items-center md:border-b md:border-border md:py-0 md:pr-[88px] md:pl-8">
+        <div className="flex min-w-0 max-w-full grow flex-col gap-0.5">
           <Link
             href="/clients?tab=actifs"
             className="inline-flex items-center gap-1 text-[12px] font-medium text-text-secondary"
           >
             <ChevronLeft size={14} strokeWidth={2} aria-hidden /> Clients
           </Link>
-          <h1 className="truncate text-[20px] leading-[26px] font-semibold tracking-[-0.01em]">
+          <h1 className="text-[28px] leading-[34px] font-semibold tracking-[-0.02em] md:truncate md:text-[20px] md:leading-[26px] md:tracking-[-0.01em]">
             {c.legal_name}
           </h1>
         </div>
@@ -82,13 +82,13 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
         )}
       </header>
 
-      <div className="flex grow flex-col gap-6 px-8 pt-7 pb-8">
-        <section className="flex items-center gap-5 rounded-block border border-border bg-white p-6">
+      <div className="flex grow flex-col gap-4 px-5 pt-2 pb-6 md:gap-6 md:px-8 md:pt-7 md:pb-8">
+        <section className="flex flex-col items-start gap-4 rounded-block border border-border bg-white p-4 md:p-6 lg:flex-row lg:items-center lg:gap-5">
           <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-ink text-[18px] font-semibold text-white">
             {initials}
           </span>
           <div className="flex grow flex-col gap-1.5">
-            <div className="flex items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
               <span className="text-[20px] font-semibold">{c.legal_name}</span>
               <span
                 className="inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-semibold"
@@ -107,20 +107,20 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
               {c.validated_at ? ' · validé par EMD DESTOCK' : ''}
             </span>
           </div>
-          <div className="flex gap-8 border-l border-border pl-6">
+          <div className="flex w-full flex-wrap gap-x-8 gap-y-3 border-t border-border pt-4 lg:w-auto lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
             {stat('Commandes', formatNumber(counted.length))}
             {stat('Total HT', formatEuro(total))}
             {stat('Dernière commande', counted[0] ? formatDayMonth(counted[0].created_at) : '—')}
           </div>
         </section>
 
-        <div className="grid grid-cols-[minmax(0,1fr)_380px] items-start gap-6">
+        <div className="grid items-start gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div
             role="table"
             aria-label="Historique des commandes"
-            className="overflow-hidden rounded-block border border-border bg-white"
+            className="flex flex-col gap-2.5 lg:block lg:overflow-hidden lg:rounded-block lg:border lg:border-border lg:bg-white"
           >
-            <div className="flex items-baseline justify-between px-5 pt-5 pb-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 lg:px-5 lg:pt-5 lg:pb-4">
               <h2 className="text-[16px] leading-[22px] font-semibold">Historique des commandes</h2>
               <span className="text-[12px] text-text-secondary">
                 Indicateurs hors commandes annulées
@@ -128,7 +128,7 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
             </div>
             <div
               role="row"
-              className={`grid h-10 ${cols} items-center gap-4 border-y border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
+              className={`hidden h-10 lg:grid ${cols} items-center gap-4 border-y border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
             >
               <span role="columnheader">N°</span>
               <span role="columnheader">Date</span>
@@ -148,22 +148,34 @@ export default async function ClientFiche({ params }: { params: Promise<{ id: st
                 key={o.id}
                 role="row"
                 href={`/commandes/${o.id}`}
-                className={`grid h-[52px] ${cols} items-center gap-4 border-b border-divider px-5`}
+                className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-card border border-border px-4 py-3 lg:h-[52px] lg:gap-4 lg:rounded-none lg:border-0 lg:border-b lg:border-divider lg:px-5 lg:py-0 ${cols}`}
               >
                 <span role="cell" className="font-mono text-[13px]">
                   {o.number}
                 </span>
-                <span role="cell" className="text-[13px] text-text-body tabular-nums">
+                <span
+                  role="cell"
+                  className="hidden text-[13px] text-text-body tabular-nums lg:block"
+                >
                   {formatShortDateTime(o.created_at)}
                 </span>
-                <span role="cell" className="truncate text-[14px]">
+                <span role="cell" className="hidden truncate text-[14px] lg:block">
                   {o.stores?.name}
                 </span>
-                <span role="cell" className="text-right text-[14px] font-semibold tabular-nums">
+                <span
+                  role="cell"
+                  className="text-right text-[14px] font-semibold tabular-nums max-lg:col-start-2 max-lg:row-start-2"
+                >
                   {formatEuro(o.total_ht)}
                 </span>
-                <span role="cell">
+                <span
+                  role="cell"
+                  className="max-lg:col-start-2 max-lg:row-start-1 max-lg:justify-self-end"
+                >
                   <StatusBadge status={o.status as OrderStatus} />
+                </span>
+                <span className="col-start-1 row-start-2 truncate text-[12px] text-text-secondary lg:hidden">
+                  {o.stores?.name} · {formatShortDateTime(o.created_at)}
                 </span>
               </Link>
             ))}
