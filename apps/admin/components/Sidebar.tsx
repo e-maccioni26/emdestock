@@ -17,7 +17,7 @@ import { signOut } from '@/app/connexion/actions';
 const NAV: { href: string; label: string; icon: LucideIcon; built: boolean }[] = [
   { href: '/', label: 'Tableau de bord', icon: LayoutDashboard, built: false },
   { href: '/commandes', label: 'Commandes', icon: Package, built: false },
-  { href: '/produits', label: 'Produits & stocks', icon: Tag, built: false },
+  { href: '/produits', label: 'Produits & stocks', icon: Tag, built: true },
   { href: '/clients', label: 'Clients', icon: Users, built: true },
   { href: '/encarts', label: 'Encarts d’accueil', icon: GalleryHorizontal, built: false },
 ];

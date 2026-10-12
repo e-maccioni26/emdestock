@@ -37,6 +37,20 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"app_settings": {
+                  Row: {
+                    "key": string,"value": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "key": string,"value": string
+                  }
+                  Update: {
+                    "key"?: string,"value"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"banner_products": {
                   Row: {
                     "banner_id": string,"product_id": string
@@ -318,6 +332,31 @@ isOneToOne: false
             "admin_stats":
 { Args: { "p_period": string,"p_ref"?: string }; Returns: Json
                            },
+"catalog_products":
+{ Args: { "p_available"?: boolean,"p_brands"?: (string)[],"p_categories"?: (string)[],"p_query"?: string }; Returns: {
+              "body": string | null,
+"brand_id": string | null,
+"category_id": string | null,
+"created_at": string,
+"description": string | null,
+"ean": string,
+"id": string,
+"is_visible": boolean,
+"placeholder_shape": Database["public"]['Enums']["placeholder_shape"],
+"price_ht": number,
+"reference": string,
+"search": string | null,
+"stock": number,
+"title": string,
+"updated_at": string,
+"weight_kg": number | null
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "products"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
@@ -349,6 +388,9 @@ isOneToOne: false
 "my_company_is_active":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"notify_edge":
+{ Args: { "p_payload": Json }; Returns: undefined
+                           },
 "place_order":
 { Args: { "p_items": Json,"p_message": string,"p_store": string }; Returns: {
               "company_id": string,
@@ -372,6 +414,9 @@ isOneToOne: false
       } },
 "register_company":
 { Args: { "p_address": string,"p_city": string,"p_first_name": string,"p_last_name": string,"p_legal_name": string,"p_phone": string,"p_postal_code": string,"p_siret": string }; Returns: string
+                           },
+"reorder_product_images":
+{ Args: { "p_ids": (string)[],"p_product": string }; Returns: undefined
                            },
 "set_company_status":
 { Args: { "p_company": string,"p_status": Database["public"]['Enums']["company_status"] }; Returns: undefined

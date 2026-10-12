@@ -4,7 +4,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { CartProvider } from '@/lib/cart';
+import { CatalogProvider } from '@/lib/catalog';
 import { SessionProvider, useSession } from '@/lib/session';
+import { StoreProvider } from '@/lib/stores';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,7 +32,10 @@ function Routes() {
         <Stack.Screen name="acces-suspendu" />
       </Stack.Protected>
       <Stack.Protected guard={access === 'active'}>
-        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="produit/[id]" />
+        <Stack.Screen name="magasin" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="filtres" options={{ presentation: 'modal' }} />
       </Stack.Protected>
       {/* Lien e-mail de récupération : accessible connecté ou non. */}
       <Stack.Screen name="nouveau-mot-de-passe" />
@@ -55,7 +61,13 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <StatusBar style="dark" />
       <SessionProvider>
-        <Routes />
+        <StoreProvider>
+          <CartProvider>
+            <CatalogProvider>
+              <Routes />
+            </CatalogProvider>
+          </CartProvider>
+        </StoreProvider>
       </SessionProvider>
     </SafeAreaProvider>
   );

@@ -133,6 +133,36 @@ select lives_ok(format($q$select set_company_status(%L, 'suspended')$q$, (select
 select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
 select throws_ok($q$select * from app_settings$q$, '42501', null, 'app_settings illisible pour un client');
 
+-- Catalogue : recherche sans accents ni casse, par marque, filtres, produit masqué exclu
+reset role;
+insert into brands (name) values ('Maison Évasion Test');
+update products set brand_id = (select id from brands where name = 'Maison Évasion Test'), title = 'Crème Hydratée Test'
+  where reference = 'T-CM-075';
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select set_company_status((select id from companies where siret = '11111111111119'), 'active');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from catalog_products('CREME hydratee'))::int, 1, 'recherche titre sans accents ni casse');
+select is((select count(*) from catalog_products('evasion'))::int, 1, 'recherche par marque');
+select is((select count(*) from catalog_products('T-AN-100'))::int, 1, 'recherche par référence');
+select is((select count(*) from catalog_products('9990000000011'))::int, 1, 'recherche par EAN');
+select is((select count(*) from catalog_products('T-HIDDEN'))::int, 0, 'produit masqué introuvable');
+select is((select count(*) from catalog_products('test', null, null, true))::int, 2, 'disponibles : stock > 0');
+select is((select count(*) from catalog_products('100%'))::int, 0, '% traité littéralement');
+
+-- Suppression produit : refusée s'il est commandé, photos réordonnées en une instruction
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is(pg_temp.sql_state_msg(format($q$delete from products where id = %L$q$, (select p1 from ids))), 'product_in_order', 'produit commandé : suppression refusée');
+select is(pg_temp.sql_state_msg(format($q$delete from products where id = %L$q$, (select p3 from ids))), 'ok', 'produit jamais commandé : suppression possible');
+
+-- Photos : réordonnancement atomique malgré la contrainte unique (product_id, position)
+reset role;
+insert into product_images (id, product_id, path, position) values
+  ('00000000-0000-0000-0000-0000000000f1', (select p2 from ids), 'a.jpg', 0),
+  ('00000000-0000-0000-0000-0000000000f2', (select p2 from ids), 'b.jpg', 1);
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select lives_ok(format($q$select reorder_product_images(%L, array['00000000-0000-0000-0000-0000000000f2','00000000-0000-0000-0000-0000000000f1']::uuid[])$q$, (select p2 from ids)), 'réordonnancement sans violation');
+select is((select path from product_images where product_id = (select p2 from ids) order by position limit 1), 'b.jpg', 'nouvel ordre appliqué');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;
