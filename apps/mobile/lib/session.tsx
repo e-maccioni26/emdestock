@@ -17,6 +17,7 @@ export interface Profile {
   last_name: string;
   email: string;
   role: string;
+  company_id: string | null;
   company: { legal_name: string; siret: string; status: string } | null;
 }
 
@@ -35,7 +36,7 @@ const Ctx = createContext<SessionValue | null>(null);
 async function loadProfile(userId: string): Promise<Profile | null> {
   const { data } = await supabase
     .from('profiles')
-    .select('first_name, last_name, email, role, companies(legal_name, siret, status)')
+    .select('first_name, last_name, email, role, company_id, companies(legal_name, siret, status)')
     .eq('id', userId)
     .maybeSingle();
   if (!data) return null;

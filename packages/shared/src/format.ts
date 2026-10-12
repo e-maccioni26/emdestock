@@ -34,3 +34,22 @@ export const formatSiret = (siret: string): string =>
 /** CMD-AAAA-NNNN, identique à la numérotation de la fonction SQL place_order. */
 export const formatOrderNumber = (year: number, seq: number): string =>
   `CMD-${year}-${String(seq).padStart(4, '0')}`;
+
+const shortFmt = new Intl.DateTimeFormat('fr-FR', {
+  day: '2-digit',
+  month: '2-digit',
+  timeZone: 'Europe/Paris',
+});
+const longDateFmt = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Europe/Paris',
+});
+
+/** « 01/10 · 10:42 » (liste des commandes). */
+export const formatShortDateTime = (d: Date | string): string =>
+  `${shortFmt.format(new Date(d))} · ${timeFmt.format(new Date(d))}`;
+/** « 1 oct. 2026 à 10:42 » (détail, historique). */
+export const formatDateTimeLong = (d: Date | string): string =>
+  `${longDateFmt.format(new Date(d))} à ${timeFmt.format(new Date(d))}`;

@@ -16,17 +16,25 @@ import { signOut } from '@/app/connexion/actions';
 
 const NAV: { href: string; label: string; icon: LucideIcon; built: boolean }[] = [
   { href: '/', label: 'Tableau de bord', icon: LayoutDashboard, built: false },
-  { href: '/commandes', label: 'Commandes', icon: Package, built: false },
+  { href: '/commandes', label: 'Commandes', icon: Package, built: true },
   { href: '/produits', label: 'Produits & stocks', icon: Tag, built: true },
   { href: '/clients', label: 'Clients', icon: Users, built: true },
   { href: '/encarts', label: 'Encarts d’accueil', icon: GalleryHorizontal, built: false },
 ];
 
-export function Sidebar({ pendingRequests, name }: { pendingRequests: number; name: string }) {
+export function Sidebar({
+  pendingRequests,
+  newOrders,
+  name,
+}: {
+  pendingRequests: number;
+  newOrders: number;
+  name: string;
+}) {
   const pathname = usePathname();
   const itemBase = 'flex h-10 items-center gap-3 rounded-control border px-3 text-[14px]';
   return (
-    <aside className="flex w-[248px] shrink-0 flex-col gap-7 border-r border-border bg-surface-alt px-4 py-5">
+    <aside className="flex w-[248px] print:hidden shrink-0 flex-col gap-7 border-r border-border bg-surface-alt px-4 py-5">
       <div className="flex items-center gap-2.5 px-2 py-1">
         <Image
           src="/logo-emd.jpg"
@@ -64,11 +72,15 @@ export function Sidebar({ pendingRequests, name }: { pendingRequests: number; na
             >
               <Icon size={20} strokeWidth={active ? 1.8 : 1.6} aria-hidden />
               <span className="grow">{label}</span>
-              {href === '/clients' && pendingRequests > 0 && (
-                <span className="h-5 min-w-5 rounded-full bg-ink px-1.5 text-center text-[11px] leading-5 font-semibold text-white tabular-nums">
-                  {pendingRequests}
-                </span>
-              )}
+              {(() => {
+                const n =
+                  href === '/clients' ? pendingRequests : href === '/commandes' ? newOrders : 0;
+                return n > 0 ? (
+                  <span className="h-5 min-w-5 rounded-full bg-ink px-1.5 text-center text-[11px] leading-5 font-semibold text-white tabular-nums">
+                    {n}
+                  </span>
+                ) : null;
+              })()}
             </Link>
           );
         })}

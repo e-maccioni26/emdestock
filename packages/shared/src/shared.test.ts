@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  formatDateTimeLong,
+  formatShortDateTime,
   SIRET_ALREADY_REGISTERED,
   accessState,
   isValidSiret,
@@ -27,6 +29,10 @@ describe('formatage', () => {
     expect(nbsp(formatEuro(7.2))).toBe('7,20 €');
   });
   it('numéro de commande', () => expect(formatOrderNumber(2026, 7)).toBe('CMD-2026-0007'));
+  it('dates de commande (Europe/Paris)', () => {
+    expect(formatShortDateTime('2026-10-01T08:42:00Z')).toBe('01/10 · 10:42');
+    expect(formatDateTimeLong('2026-10-01T08:42:00Z')).toBe('1 oct. 2026 à 10:42');
+  });
   it('SIRET', () => expect(formatSiret('90963966800013')).toBe('909 639 668 00013'));
 });
 

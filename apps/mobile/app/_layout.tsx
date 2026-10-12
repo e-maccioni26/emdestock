@@ -36,6 +36,9 @@ function Routes() {
         <Stack.Screen name="produit/[id]" />
         <Stack.Screen name="magasin" options={{ presentation: 'modal' }} />
         <Stack.Screen name="filtres" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="magasin-form" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="recap" />
+        <Stack.Screen name="confirmation" options={{ gestureEnabled: false }} />
       </Stack.Protected>
       {/* Lien e-mail de récupération : accessible connecté ou non. */}
       <Stack.Screen name="nouveau-mot-de-passe" />
