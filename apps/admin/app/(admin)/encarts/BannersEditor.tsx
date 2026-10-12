@@ -168,7 +168,10 @@ export function BannersEditor({
       const r = await saveBanner({ ...draft, productIds, target_id });
       if (r.error) return setError(r.error);
       setSaved(true);
-      if (r.id && r.id !== selected) setSelected(r.id);
+      if (r.id) {
+        setSelected(r.id);
+        setDraft((d) => ({ ...d, id: r.id! })); // un second « Enregistrer » met à jour au lieu de recréer
+      }
       router.refresh();
     });
   }

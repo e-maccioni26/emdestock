@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
 const selectClass =
@@ -22,11 +22,10 @@ export function ProductFilters({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
   const [text, setText] = useState(q);
 
   const update = (key: string, value: string) => {
-    const next = new URLSearchParams(params.toString());
+    const next = new URLSearchParams(window.location.search);
     if (value) next.set(key, value);
     else next.delete(key);
     next.delete('page');

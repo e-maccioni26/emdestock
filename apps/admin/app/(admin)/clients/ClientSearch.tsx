@@ -1,18 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 
 export function ClientSearch({ q }: { q: string }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
   const [text, setText] = useState(q);
   useEffect(() => {
     if (text === q) return;
     const t = setTimeout(() => {
-      const next = new URLSearchParams(params.toString());
+      const next = new URLSearchParams(window.location.search);
       if (text.trim()) next.set('q', text.trim());
       else next.delete('q');
       router.replace(`${pathname}?${next.toString()}`);

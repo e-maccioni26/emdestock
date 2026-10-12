@@ -10,3 +10,5 @@ supabase/.temp
 .DS_Store
 
 supabase/functions/.env
+playwright-report
+test-results

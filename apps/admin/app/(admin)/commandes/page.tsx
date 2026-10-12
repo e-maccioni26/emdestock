@@ -96,7 +96,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
     return `/commandes${s ? `?${s}` : ''}`;
   };
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const cols = 'grid-cols-[118px_132px_minmax(0,1.3fr)_minmax(0,1fr)_56px_64px_112px_140px_16px]';
+  const cols = 'grid-cols-[112px_104px_minmax(0,1.3fr)_minmax(0,1fr)_44px_56px_104px_132px_16px]';
   const from = total === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
 
   return (
@@ -143,7 +143,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
         >
           <div
             role="row"
-            className={`grid h-11 ${cols} items-center gap-4 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
+            className={`grid h-11 ${cols} items-center gap-3 border-b border-border bg-surface-alt px-5 text-[12px] font-medium text-text-secondary`}
           >
             <span role="columnheader">N°</span>
             <span role="columnheader">Date</span>
@@ -173,7 +173,7 @@ export default async function Commandes({ searchParams }: { searchParams: Promis
                 key={r.id}
                 role="row"
                 href={`/commandes/${r.id}`}
-                className={`grid h-14 ${cols} items-center gap-4 border-b border-divider px-5 ${unseen ? 'bg-surface-alt' : 'bg-white'}`}
+                className={`grid h-14 ${cols} items-center gap-3 border-b border-divider px-5 ${unseen ? 'bg-surface-alt' : 'bg-white'}`}
               >
                 <span
                   role="cell"
