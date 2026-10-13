@@ -8,6 +8,7 @@ import { CartProvider } from '@/lib/cart';
 import { CatalogProvider } from '@/lib/catalog';
 import { SessionProvider, useSession } from '@/lib/session';
 import { StoreProvider } from '@/lib/stores';
+import { ToastProvider } from '@/lib/toast';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -71,7 +72,9 @@ export default function RootLayout() {
         <StoreProvider>
           <CartProvider>
             <CatalogProvider>
-              <Routes />
+              <ToastProvider>
+                <Routes />
+              </ToastProvider>
             </CatalogProvider>
           </CartProvider>
         </StoreProvider>

@@ -18,6 +18,7 @@ import { QuantityStepper } from '@/components/QuantityStepper';
 import { Text } from '@/components/Text';
 import { PRODUCT_COLUMNS } from '@/lib/catalog';
 import { useCart } from '@/lib/cart';
+import { useToast } from '@/lib/toast';
 import { supabase } from '@/lib/supabase';
 
 interface Product {
@@ -50,7 +51,8 @@ export default function ProduitScreen() {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const slideWidth = Math.min(width, tokens.layout.mobile.width);
-  const { add } = useCart();
+  const { add, lines } = useCart();
+  const toast = useToast();
   const [p, setP] = useState<Product | null>(null);
   const [state, setState] = useState<'loading' | 'ready' | 'missing' | 'error'>('loading');
   const [qty, setQty] = useState(1);
@@ -331,9 +333,21 @@ export default function ProduitScreen() {
           accessibilityState={{ disabled: out }}
           disabled={out}
           onPress={() => {
+            // la quantité cumulée est plafonnée au stock : annoncer ce qui a réellement été ajouté
+            const inCart = lines.find((l) => l.productId === p.id)?.quantity ?? 0;
+            const gained = Math.min(inCart + qty, Math.max(p.stock, 1)) - inCart;
             add(p.id, qty, p.stock);
             setAdded(true);
             setTimeout(() => setAdded(false), 1500);
+            toast({
+              message:
+                gained === 0
+                  ? 'Stock maximum déjà dans votre commande'
+                  : gained === 1
+                    ? '1 article ajouté à votre commande'
+                    : `${gained} articles ajoutés à votre commande`,
+              action: { label: 'Voir', onPress: () => router.navigate('/commande') },
+            });
           }}
           style={{
             flex: 1,
