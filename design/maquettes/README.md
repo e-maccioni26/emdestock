@@ -12,6 +12,7 @@ Exports des maquettes validées. **Référence visuelle : ne pas modifier, ne pa
 | Fichier | Écran |
 |---|---|
 | `DesignSystem.html` | Planche du design system (couleurs, typo, composants) |
+| `Demarrage.html` | Démarrage : splash animé puis écran d'accueil (prop `etape` : animation, splash, accueil) |
 | `Connexion.html` | Connexion |
 | `Inscription.html` | Demande d'accès professionnel (état après vérification SIRET réussie) |
 | `EnAttente.html` | Demande envoyée, compte en attente |

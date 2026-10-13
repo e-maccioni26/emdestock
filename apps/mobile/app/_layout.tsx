@@ -18,6 +18,7 @@ function Routes() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={access === null}>
+        <Stack.Screen name="demarrage" />
         <Stack.Screen name="connexion" />
         <Stack.Screen name="inscription" />
         <Stack.Screen name="mot-de-passe-oublie" />
