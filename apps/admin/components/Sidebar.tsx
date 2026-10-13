@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   GalleryHorizontal,
+  ScrollText,
   LayoutDashboard,
   LogOut,
   Package,
@@ -38,6 +39,9 @@ export function Sidebar({
   const pathname = usePathname();
   const items = [
     ...NAV,
+    ...(canManageTeam
+      ? [{ href: '/journal', label: 'Journal', icon: ScrollText, built: true }]
+      : []),
     {
       href: '/equipe',
       label: canManageTeam ? 'Équipe' : 'Mon compte',

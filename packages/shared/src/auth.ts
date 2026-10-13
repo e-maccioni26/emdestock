@@ -29,7 +29,12 @@ export const isValidSiret = (input: string): boolean => {
 export const SIRET_ALREADY_REGISTERED = 'Ce SIRET est déjà inscrit. Contactez EMD DESTOCK.';
 
 export type VerifySiretCode =
-  'invalid_format' | 'not_found' | 'inactive' | 'already_registered' | 'unavailable';
+  | 'invalid_format'
+  | 'not_found'
+  | 'inactive'
+  | 'already_registered'
+  | 'unavailable'
+  | 'rate_limited';
 
 export const verifySiretMessage = (code: VerifySiretCode): string =>
   ({
@@ -38,6 +43,7 @@ export const verifySiretMessage = (code: VerifySiretCode): string =>
     inactive: 'Cet établissement n’est plus actif.',
     already_registered: SIRET_ALREADY_REGISTERED,
     unavailable: 'Vérification impossible pour le moment. Réessayez dans quelques instants.',
+    rate_limited: 'Trop de vérifications. Réessayez dans une heure ou contactez EMD DESTOCK.',
   })[code];
 
 export interface VerifySiretCompany {

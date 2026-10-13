@@ -24,12 +24,24 @@ Deno.serve(async (req) => {
   if (!caller.user) return json({ error: 'unauthorized' }, 401);
   const { data: me } = await supabase
     .from('profiles')
-    .select('role, can_manage_team, disabled_at')
+    .select('role, can_manage_team, disabled_at, first_name, last_name')
     .eq('id', caller.user.id)
     .maybeSingle();
   if (me?.role !== 'admin' || !me.can_manage_team || me.disabled_at) {
     return json({ error: 'forbidden' }, 403);
   }
+
+  // Journal d'actions : les triggers SQL ne voient pas la clé service_role, on écrit donc la ligne ici.
+  const log = (action: string, id: string, label: string, changes: Record<string, unknown> = {}) =>
+    supabase.from('audit_log').insert({
+      actor_id: caller.user.id,
+      actor_name: `${me.first_name} ${me.last_name}`,
+      action,
+      entity: 'admin_account',
+      entity_id: id,
+      label,
+      changes,
+    });
 
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const str = (k: string) => String(body[k] ?? '').trim();
@@ -43,6 +55,14 @@ Deno.serve(async (req) => {
       .eq('can_manage_team', true)
       .is('disabled_at', null);
     return (data ?? []).every((m) => m.id === id);
+  }
+  async function nameOf(id: string) {
+    const { data } = await supabase
+      .from('profiles')
+      .select('first_name, last_name, email')
+      .eq('id', id)
+      .maybeSingle();
+    return data ? `${data.first_name} ${data.last_name} (${data.email})` : id;
   }
   async function target(id: string) {
     const { data } = await supabase
@@ -84,6 +104,9 @@ Deno.serve(async (req) => {
         console.error('admin-users profile', profileError);
         return json({ error: 'create_failed' }, 500);
       }
+      await log('create', data.user.id, `${first} ${last} (${email})`, {
+        can_manage_team: body.can_manage_team === true,
+      });
       return json({ ok: true, id: data.user.id });
     }
 
@@ -105,6 +128,7 @@ Deno.serve(async (req) => {
         .from('profiles')
         .update({ disabled_at: disabled ? new Date().toISOString() : null })
         .eq('id', id);
+      await log(disabled ? 'disable' : 'enable', id, await nameOf(id));
       return json({ ok: true });
     }
 
@@ -115,7 +139,9 @@ Deno.serve(async (req) => {
       const { error } = await supabase.auth.admin.updateUserById(id, {
         password: String(body.password),
       });
-      return error ? json({ error: 'update_failed' }, 500) : json({ ok: true });
+      if (error) return json({ error: 'update_failed' }, 500);
+      await log('reset_password', id, await nameOf(id)); // jamais le mot de passe lui-même
+      return json({ ok: true });
     }
 
     case 'delete': {
@@ -126,8 +152,11 @@ Deno.serve(async (req) => {
       if (t.can_manage_team && !t.disabled_at && (await isLastManager(id))) {
         return json({ error: 'last_manager' }, 400);
       }
-      const { error } = await supabase.auth.admin.deleteUser(id); // le profil part en cascade
-      return error ? json({ error: 'delete_failed' }, 500) : json({ ok: true });
+      const label = await nameOf(id); // avant la suppression : le profil part en cascade
+      const { error } = await supabase.auth.admin.deleteUser(id);
+      if (error) return json({ error: 'delete_failed' }, 500);
+      await log('delete', id, label);
+      return json({ ok: true });
     }
 
     default:

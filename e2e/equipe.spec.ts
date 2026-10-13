@@ -110,5 +110,25 @@ test.describe.serial('équipe du back-office', () => {
     await page.getByRole('button', { name: 'Se déconnecter' }).click();
     await attempt(page, NEW.email, password);
     await expect(page.getByText('E-mail ou mot de passe incorrect.')).toBeVisible();
+
+    // chaque opération est dans le journal, au nom du gestionnaire, sans mot de passe
+    await loginOk(page, ADMIN.email, ADMIN.password);
+    await page.goto('/journal?entity=admin_account');
+    for (const action of [
+      'Création',
+      'Désactivation',
+      'Réactivation',
+      'Nouveau mot de passe',
+      'Suppression',
+    ]) {
+      await expect(
+        page
+          .getByRole('row')
+          .filter({ hasText: `${action} · Compte admin` })
+          .filter({ hasText: NEW.email })
+          .filter({ hasText: 'Admin EMD' }),
+      ).toHaveCount(1);
+    }
+    await expect(page.getByText(password)).toHaveCount(0);
   });
 });

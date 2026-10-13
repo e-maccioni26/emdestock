@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
   if (!caller.user) return json({ error: 'unauthorized' }, 401);
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, company_id')
+    .select('role, company_id, first_name, last_name')
     .eq('id', caller.user.id)
     .maybeSingle();
   if (!profile) return json({ error: 'forbidden' }, 403);
@@ -34,6 +34,23 @@ Deno.serve(async (req) => {
     companyId = profile.company_id; // un client ne supprime jamais que son propre compte
   }
   if (!companyId) return json({ error: 'no company' }, 400);
+
+  // Journal d'actions : suppression d'un compte client par un administrateur (la clé service_role échappe aux triggers).
+  if (profile.role === 'admin') {
+    const { data: c } = await supabase
+      .from('companies')
+      .select('legal_name')
+      .eq('id', companyId)
+      .maybeSingle();
+    await supabase.from('audit_log').insert({
+      actor_id: caller.user.id,
+      actor_name: `${profile.first_name} ${profile.last_name}`,
+      action: 'delete_account',
+      entity: 'company',
+      entity_id: companyId,
+      label: c?.legal_name ?? null,
+    });
+  }
 
   // 1. Entreprise : statut "deleted" et données personnelles effacées (idempotent).
   const { error: companyError } = await supabase

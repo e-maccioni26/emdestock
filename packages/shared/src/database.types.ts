@@ -51,6 +51,20 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"audit_log": {
+                  Row: {
+                    "action": string,"actor_id": string | null,"actor_name": string,"at": string,"changes": NonNullable<Json>,"entity": string,"entity_id": string | null,"id": number,"label": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "action": string,"actor_id"?: string | null,"actor_name": string,"at"?: string,"changes"?: NonNullable<Json>,"entity": string,"entity_id"?: string | null,"id"?: never,"label"?: string | null
+                  }
+                  Update: {
+                    "action"?: string,"actor_id"?: string | null,"actor_name"?: string,"at"?: string,"changes"?: NonNullable<Json>,"entity"?: string,"entity_id"?: string | null,"id"?: never,"label"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"banner_products": {
                   Row: {
                     "banner_id": string,"product_id": string
@@ -343,6 +357,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"rate_limits": {
+                  Row: {
+                    "at": string,"key": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "at"?: string,"key": string
+                  }
+                  Update: {
+                    "at"?: string,"key"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"stores": {
                   Row: {
                     "address": string,"archived_at": string | null,"city": string,"company_id": string,"created_at": string,"id": string,"name": string,"postal_code": string
@@ -377,6 +405,18 @@ isOneToOne: false
 "admin_stats":
 { Args: { "p_period": string,"p_ref"?: string }; Returns: Json
                            },
+"audit_add":
+{ Args: { "p_action": string,"p_changes": Json,"p_entity": string,"p_entity_id": string,"p_label": string }; Returns: undefined
+                           },
+"audit_clip":
+{ Args: { "j": Json }; Returns: Json
+                           },
+"audit_label":
+{ Args: { "p_entity": string,"p_row": Json }; Returns: string
+                           },
+"audit_note":
+{ Args: { "p_action": string,"p_changes": Json,"p_entity": string,"p_entity_id": string,"p_label": string }; Returns: undefined
+                           },
 "catalog_products":
 { Args: { "p_available"?: boolean,"p_brands"?: (string)[],"p_categories"?: (string)[],"p_query"?: string }; Returns: {
               "body": string | null,
@@ -402,7 +442,13 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"check_rate_limit":
+{ Args: { "p_key": string,"p_max": number,"p_window": string }; Returns: boolean
+                           },
 "is_admin":
+{ Args: Record<PropertyKey, never>; Returns: boolean
+                           },
+"is_team_manager":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
 "my_banners":

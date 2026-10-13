@@ -310,6 +310,66 @@ update profiles set disabled_at = null where id = '00000000-0000-0000-0000-00000
 select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
 select is(is_admin(), true, 'réactivé : de nouveau admin');
 
+-- Commandes : plus de modification directe (seul viewed_at)
+reset role;
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+create temp table o as select id from orders where status <> 'cancelled' order by created_at limit 1;
+select is(pg_temp.sql_state_msg(format($q$update orders set total_ht = 0.01 where id = %L$q$, (select id from o))),
+  'permission denied for table orders', 'un admin ne modifie plus le montant d''une commande directement');
+select is(pg_temp.sql_state_msg(format($q$update orders set status = 'cancelled' where id = %L$q$, (select id from o))),
+  'permission denied for table orders', 'ni son statut (sans remise en stock)');
+select is(pg_temp.sql_state_msg(format($q$update orders set viewed_at = now() where id = %L$q$, (select id from o))),
+  'ok', 'viewed_at reste modifiable');
+
+-- Journal d'actions
+reset role;
+delete from audit_log;
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+update products set price_ht = 41.00 where id = (select p1 from ids);
+select is((select count(*) from audit_log)::int, 0, 'un employé ne lit pas le journal');
+reset role;
+select set_config('request.jwt.claims', '', true);
+update profiles set can_manage_team = true where id = '00000000-0000-0000-0000-0000000000a1';
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is((select count(*) from audit_log where entity = 'product')::int, 1, 'la modification d''un produit est journalisée');
+select is((select actor_name from audit_log where entity = 'product'), 'Admin EMD', 'avec le nom de l''auteur');
+select is((select changes -> 'price_ht' ->> 1 from audit_log where entity = 'product')::numeric, 41.00, 'et la nouvelle valeur');
+update products set price_ht = 41.00 where id = (select p1 from ids);
+select is((select count(*) from audit_log)::int, 1, 'une mise à jour sans changement ne crée pas de ligne');
+select set_order_status((select id from o), 'preparing');
+select is((select changes -> 'status' ->> 1 from audit_log where entity = 'order'), 'preparing', 'le changement de statut d''une commande est journalisé');
+select set_product_exclusions((select p1 from ids), array[(select id from companies limit 1)]);
+select set_product_exclusions((select p1 from ids), array[(select id from companies limit 1)]);
+select is((select count(*) from audit_log where entity = 'product_visibility')::int, 1, 'masquer deux fois le même client ne journalise qu''une fois');
+select set_product_exclusions((select p1 from ids), '{}');
+select is((select count(*) from audit_log where entity = 'product_visibility')::int, 2, 'rétablir la visibilité est journalisé');
+insert into brands (name) values ('Marque Journal');
+select is((select action from audit_log where entity = 'brand'), 'create', 'une création est journalisée comme « create »');
+select is(pg_temp.sql_state_msg($q$insert into audit_log (actor_name, action, entity) values ('x', 'create', 'x')$q$),
+  'permission denied for table audit_log', 'personne n''écrit dans le journal depuis l''API');
+select is(pg_temp.sql_state_msg($q$update audit_log set actor_name = 'x'$q$), 'permission denied for table audit_log', 'ni ne le modifie');
+select is(pg_temp.sql_state_msg($q$delete from audit_log$q$), 'permission denied for table audit_log', 'ni ne l''efface');
+select is(pg_temp.sql_state_msg($q$select audit_add('x', 'create', null, 'x', '{}')$q$), 'permission denied for function audit_add', 'audit_add reste interne');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is((select count(*) from audit_log)::int, 0, 'un client ne lit pas le journal');
+reset role;
+select is((select count(*) from audit_log where actor_name <> 'Admin EMD')::int, 0, 'les actions d''un client ne sont pas journalisées');
+
+-- Limite d'appels (verify-siret)
+reset role;
+select set_config('request.jwt.claims', '', true);
+select is(check_rate_limit('t:a', 2, '1 hour'), true, 'rate limit : 1er appel accepté');
+select is(check_rate_limit('t:a', 2, '1 hour'), true, '2e appel accepté');
+select is(check_rate_limit('t:a', 2, '1 hour'), false, '3e appel refusé');
+select is(check_rate_limit('t:b', 2, '1 hour'), true, 'une autre clé a son propre compteur');
+insert into rate_limits (key, at) values ('t:old', now() - interval '2 days');
+select check_rate_limit('t:c', 2, '1 hour');
+select is((select count(*) from rate_limits where key = 't:old')::int, 0, 'les anciennes lignes sont purgées');
+select pg_temp.login('00000000-0000-0000-0000-0000000000c1');
+select is(pg_temp.sql_state_msg($q$select check_rate_limit('t:x', 1, '1 hour')$q$), 'permission denied for function check_rate_limit',
+  'un client ne peut pas appeler check_rate_limit');
+select is(pg_temp.sql_state_msg($q$select count(*) from rate_limits$q$), 'permission denied for table rate_limits', 'ni lire la table');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

@@ -21,6 +21,17 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
+  // Fonction publique : sans limite, on pourrait deviner quelles entreprises sont clientes (réponse
+  // `already_registered`) et épuiser le quota de l'API Insee. cf-connecting-ip = IP réelle derrière Cloudflare.
+  const ip =
+    req.headers.get('cf-connecting-ip') ??
+    req.headers.get('x-forwarded-for')?.split(',').at(-1)?.trim() ??
+    'local';
+  const [{ data: okIp }, { data: okAll }] = await Promise.all([
+    supabase.rpc('check_rate_limit', { p_key: `siret:${ip}`, p_max: 10, p_window: '1 hour' }),
+    supabase.rpc('check_rate_limit', { p_key: 'siret:all', p_max: 300, p_window: '1 hour' }),
+  ]);
+  if (!okIp || !okAll) return json({ ok: false, code: 'rate_limited' });
   const { data: existing } = await supabase
     .from('companies')
     .select('id')

@@ -79,4 +79,6 @@ Le seed est réservé au local. En production, créer à la main un client actif
 - [ ] Domaine Resend vérifié, `EMAIL_DRY_RUN=0`, un e-mail de test reçu (inscription, validation, commande).
 - [ ] Un SIRET réel testé de bout en bout (inscription → validation admin → e-mail → connexion).
 - [ ] Import du catalogue (lot 8, fichier CSV du client).
+- [ ] `verify-siret` : vérifier que la limite d'appels voit bien l'IP réelle (appeler 11 fois de suite avec le même SIRET : le 11e doit répondre « Trop de vérifications »).
+- [ ] Auth : `secure_password_change = true`, et second facteur (TOTP) pour les comptes administrateurs (non fait, voir l'audit).
 - [ ] Sauvegardes Supabase activées (plan payant) et mot de passe administrateur unique.

@@ -8,6 +8,7 @@ import {
   GalleryHorizontal,
   LayoutDashboard,
   LogOut,
+  ScrollText,
   Package,
   Tag,
   UserCog,
@@ -40,7 +41,10 @@ export function TabBar({
     `relative flex h-[49px] flex-col items-center justify-center gap-0.5 text-[10px] ${
       active ? 'font-semibold text-ink' : 'font-medium text-text-secondary'
     }`;
-  const moreActive = pathname.startsWith('/encarts') || pathname.startsWith('/equipe');
+  const moreActive =
+    pathname.startsWith('/encarts') ||
+    pathname.startsWith('/equipe') ||
+    pathname.startsWith('/journal');
   return (
     <>
       {more && (
@@ -60,6 +64,17 @@ export function TabBar({
               <GalleryHorizontal size={20} strokeWidth={1.6} aria-hidden />
               Encarts d’accueil
             </Link>
+            {canManageTeam && (
+              <Link
+                role="menuitem"
+                href="/journal"
+                onClick={() => setMore(false)}
+                className="flex min-h-12 items-center gap-3 border-t border-divider px-4 text-[14px] font-medium"
+              >
+                <ScrollText size={20} strokeWidth={1.6} aria-hidden />
+                Journal
+              </Link>
+            )}
             <Link
               role="menuitem"
               href="/equipe"

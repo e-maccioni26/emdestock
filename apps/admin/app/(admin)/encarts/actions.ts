@@ -129,12 +129,35 @@ export async function saveBanner(d: BannerDraft): Promise<{ id?: string; error?:
     id = data.id;
   }
 
+  // Journal : la sélection de produits n'est pas vue par les triggers (supprimée puis recréée à chaque enregistrement).
+  const selection = async () => {
+    const { data } = await supabase
+      .from('banner_products')
+      .select('products(reference)')
+      .eq('banner_id', id!);
+    return (data ?? [])
+      .map((r) => r.products?.reference)
+      .filter(Boolean)
+      .sort()
+      .join(', ');
+  };
+  const before = await selection();
   await supabase.from('banner_products').delete().eq('banner_id', id);
   if (d.target_type === 'selection') {
     const { error } = await supabase
       .from('banner_products')
       .insert(d.productIds.map((product_id) => ({ banner_id: id!, product_id })));
     if (error) return { error: 'La sélection de produits n’a pas pu être enregistrée.' };
+  }
+  const after = await selection();
+  if (before !== after) {
+    await supabase.rpc('audit_note', {
+      p_entity: 'banner_selection',
+      p_action: 'update',
+      p_entity_id: id,
+      p_label: title,
+      p_changes: { produits: [before || '—', after || '—'] },
+    });
   }
   revalidatePath('/encarts');
   return { id };
