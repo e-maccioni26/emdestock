@@ -16,8 +16,12 @@ $$;
 
 -- Admin
 select pg_temp.mk_user('00000000-0000-0000-0000-00000000000a', 'admin@emd-destock.test', 'AdminDemo2026!');
+insert into profiles (id, role, first_name, last_name, email, can_manage_team)
+values ('00000000-0000-0000-0000-00000000000a', 'admin', 'Admin', 'EMD', 'admin@emd-destock.test', true);
+-- Employé : accès complet au back-office sauf la gestion de l'équipe
+select pg_temp.mk_user('00000000-0000-0000-0000-00000000000b', 'employe@emd-destock.test', 'EmployeDemo2026!');
 insert into profiles (id, role, first_name, last_name, email)
-values ('00000000-0000-0000-0000-00000000000a', 'admin', 'Admin', 'EMD', 'admin@emd-destock.test');
+values ('00000000-0000-0000-0000-00000000000b', 'admin', 'Sophie', 'Employée', 'employe@emd-destock.test');
 
 -- Marques, catégories
 insert into brands (id, name) values

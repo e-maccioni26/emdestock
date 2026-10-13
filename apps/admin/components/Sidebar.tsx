@@ -9,6 +9,8 @@ import {
   LogOut,
   Package,
   Tag,
+  UserCog,
+  UserRound,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -26,12 +28,23 @@ export function Sidebar({
   pendingRequests,
   newOrders,
   name,
+  canManageTeam,
 }: {
   pendingRequests: number;
   newOrders: number;
   name: string;
+  canManageTeam: boolean;
 }) {
   const pathname = usePathname();
+  const items = [
+    ...NAV,
+    {
+      href: '/equipe',
+      label: canManageTeam ? 'Équipe' : 'Mon compte',
+      icon: canManageTeam ? UserCog : UserRound,
+      built: true,
+    },
+  ];
   const itemBase = 'flex h-10 items-center gap-3 rounded-control border px-3 text-[14px]';
   return (
     <aside className="hidden w-[248px] print:hidden shrink-0 md:flex flex-col gap-7 border-r border-border bg-surface-alt px-4 py-5">
@@ -48,7 +61,7 @@ export function Sidebar({
         </span>
       </div>
       <nav aria-label="Navigation du back-office" className="flex flex-col gap-0.5">
-        {NAV.map(({ href, label, icon: Icon, built }) => {
+        {items.map(({ href, label, icon: Icon, built }) => {
           const active = built && (href === '/' ? pathname === '/' : pathname.startsWith(href));
           if (!built) {
             // Lots suivants (docs/PLAN.md) : visible mais inactif.

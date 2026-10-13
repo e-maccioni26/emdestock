@@ -285,6 +285,31 @@ select is((select count(*) from content_versions where key = 'banners')::int, 1,
 select is(pg_temp.sql_state_msg($q$update content_versions set updated_at = now()$q$), 'permission denied for table content_versions',
   'le client ne peut pas modifier la version');
 
+-- Équipe du back-office : garde des privilèges de profil
+reset role;
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is(pg_temp.sql_state_msg($q$update profiles set can_manage_team = true where id = auth.uid()$q$), 'forbidden',
+  'un employé ne se promeut pas gestionnaire d''équipe');
+select is(pg_temp.sql_state_msg($q$update profiles set disabled_at = now() where role = 'admin'$q$), 'forbidden',
+  'un admin ne désactive pas un compte directement');
+select is(pg_temp.sql_state_msg($q$update profiles set role = 'admin' where role = 'client'$q$), 'forbidden',
+  'un client ne devient pas admin par l''API');
+select is(pg_temp.sql_state_msg(format($q$insert into profiles (id, role, first_name, last_name, email) values (%L, 'admin', 'X', 'Y', 'x@y.z')$q$,
+  '00000000-0000-0000-0000-0000000000c2')), 'forbidden', 'pas de création de profil admin par l''API');
+select is(pg_temp.sql_state_msg($q$delete from profiles where id = auth.uid()$q$), 'forbidden', 'un admin ne supprime pas un profil admin par l''API');
+select is(pg_temp.sql_state_msg($q$update profiles set phone = '0102030405' where role = 'client'$q$), 'ok', 'les autres champs restent modifiables');
+reset role;
+select set_config('request.jwt.claims', '', true);
+update profiles set disabled_at = now() where id = '00000000-0000-0000-0000-0000000000a1';
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is(is_admin(), false, 'un compte désactivé n''est plus admin');
+select is((select count(*) from products)::int, 0, 'un compte désactivé ne lit plus le catalogue admin');
+reset role;
+select set_config('request.jwt.claims', '', true);
+update profiles set disabled_at = null where id = '00000000-0000-0000-0000-0000000000a1';
+select pg_temp.login('00000000-0000-0000-0000-0000000000a1');
+select is(is_admin(), true, 'réactivé : de nouveau admin');
+
 -- Fonctions fermées à anon
 reset role;
 set local role anon;

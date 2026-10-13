@@ -13,9 +13,10 @@ Ce guide liste, dans l'ordre, ce qu'il faut faire avec les comptes d'Elone (Supa
 3. Auth › Providers › Email : **désactiver « Confirm email »** (l'inscription suppose `enable_confirmations = false`). Auth › URL : renseigner l'URL du back-office.
 4. Créer le compte administrateur : Auth › Users › Add user (e-mail + mot de passe fort), puis dans l'éditeur SQL :
    ```sql
-   insert into profiles (id, role, first_name, last_name, email)
-   values ('<uuid du user>', 'admin', 'Prénom', 'Nom', '<e-mail>');
+   insert into profiles (id, role, first_name, last_name, email, can_manage_team)
+   values ('<uuid du user>', 'admin', 'Prénom', 'Nom', '<e-mail>', true);
    ```
+   Ce premier compte est « gestionnaire d'équipe » : il crée ensuite les comptes des employés depuis le back-office (menu Équipe).
 5. Insérer les réglages d'envoi des e-mails (jamais en dur dans une migration) :
    ```sql
    insert into app_settings values
@@ -26,9 +27,9 @@ Ce guide liste, dans l'ordre, ce qu'il faut faire avec les comptes d'Elone (Supa
    ```bash
    pnpm exec supabase secrets set INSEE_API_KEY=… RESEND_API_KEY=… EMAIL_FROM=… \
      ADMIN_NOTIFICATION_EMAIL=… ADMIN_URL=https://<back-office> NOTIFY_WEBHOOK_SECRET=<même secret> EMAIL_DRY_RUN=0
-   pnpm exec supabase functions deploy verify-siret notify delete-account
+   pnpm exec supabase functions deploy verify-siret notify delete-account admin-users
    ```
-   `notify` n'est pas protégée par JWT (`verify_jwt = false` dans `supabase/config.toml`) mais par l'en-tête `x-webhook-secret`. `verify-siret` et `delete-account` gardent la vérification JWT par défaut ; `delete-account` contrôle en plus l'appelant dans son code.
+   `notify` n'est pas protégée par JWT (`verify_jwt = false` dans `supabase/config.toml`) mais par l'en-tête `x-webhook-secret`. `verify-siret`, `delete-account` et `admin-users` gardent la vérification JWT par défaut ; `delete-account` et `admin-users` contrôlent en plus l'appelant dans leur code (`admin-users` exige un administrateur gestionnaire d'équipe actif).
 7. Storage : les buckets `product-images` et `banner-images` sont créés par les migrations.
 
 ## 2. Resend (e-mails)

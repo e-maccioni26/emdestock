@@ -325,14 +325,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "company_id": string | null,"created_at": string,"email": string,"first_name": string,"id": string,"last_name": string,"phone": string | null,"role": Database["public"]['Enums']["user_role"]
+                    "can_manage_team": boolean,"company_id": string | null,"created_at": string,"disabled_at": string | null,"email": string,"first_name": string,"id": string,"last_name": string,"phone": string | null,"role": Database["public"]['Enums']["user_role"]
                   }
                   ComputedFields: never
                   Insert: {
-                    "company_id"?: string | null,"created_at"?: string,"email": string,"first_name": string,"id": string,"last_name": string,"phone"?: string | null,"role"?: Database["public"]['Enums']["user_role"]
+                    "can_manage_team"?: boolean,"company_id"?: string | null,"created_at"?: string,"disabled_at"?: string | null,"email": string,"first_name": string,"id": string,"last_name": string,"phone"?: string | null,"role"?: Database["public"]['Enums']["user_role"]
                   }
                   Update: {
-                    "company_id"?: string | null,"created_at"?: string,"email"?: string,"first_name"?: string,"id"?: string,"last_name"?: string,"phone"?: string | null,"role"?: Database["public"]['Enums']["user_role"]
+                    "can_manage_team"?: boolean,"company_id"?: string | null,"created_at"?: string,"disabled_at"?: string | null,"email"?: string,"first_name"?: string,"id"?: string,"last_name"?: string,"phone"?: string | null,"role"?: Database["public"]['Enums']["user_role"]
                   }
                   Relationships: [
                     {

@@ -14,10 +14,10 @@ export async function signIn(_prev: LoginState, form: FormData): Promise<LoginSt
   if (error) return { error: 'E-mail ou mot de passe incorrect.' };
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role')
+    .select('role, disabled_at')
     .eq('id', data.user.id)
     .maybeSingle();
-  if (profile?.role !== 'admin') {
+  if (profile?.role !== 'admin' || profile.disabled_at) {
     await supabase.auth.signOut();
     return { error: 'Ce compte n’a pas accès au back-office.' };
   }

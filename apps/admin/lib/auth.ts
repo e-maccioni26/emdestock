@@ -8,9 +8,9 @@ export async function requireAdmin() {
   if (!data.user) redirect('/connexion');
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, first_name, last_name')
+    .select('role, first_name, last_name, can_manage_team, disabled_at')
     .eq('id', data.user.id)
     .maybeSingle();
-  if (profile?.role !== 'admin') redirect('/connexion?erreur=acces');
+  if (profile?.role !== 'admin' || profile.disabled_at) redirect('/connexion?erreur=acces');
   return { supabase, user: data.user, profile };
 }

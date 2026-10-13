@@ -10,6 +10,8 @@ import {
   LogOut,
   Package,
   Tag,
+  UserCog,
+  UserRound,
   Users,
   type LucideIcon,
 } from 'lucide-react';
@@ -26,9 +28,11 @@ const TABS: { href: string; label: string; icon: LucideIcon }[] = [
 export function TabBar({
   pendingRequests,
   newOrders,
+  canManageTeam,
 }: {
   pendingRequests: number;
   newOrders: number;
+  canManageTeam: boolean;
 }) {
   const pathname = usePathname();
   const [more, setMore] = useState(false);
@@ -36,7 +40,7 @@ export function TabBar({
     `relative flex h-[49px] flex-col items-center justify-center gap-0.5 text-[10px] ${
       active ? 'font-semibold text-ink' : 'font-medium text-text-secondary'
     }`;
-  const moreActive = pathname.startsWith('/encarts');
+  const moreActive = pathname.startsWith('/encarts') || pathname.startsWith('/equipe');
   return (
     <>
       {more && (
@@ -55,6 +59,19 @@ export function TabBar({
             >
               <GalleryHorizontal size={20} strokeWidth={1.6} aria-hidden />
               Encarts d’accueil
+            </Link>
+            <Link
+              role="menuitem"
+              href="/equipe"
+              onClick={() => setMore(false)}
+              className="flex min-h-12 items-center gap-3 border-t border-divider px-4 text-[14px] font-medium"
+            >
+              {canManageTeam ? (
+                <UserCog size={20} strokeWidth={1.6} aria-hidden />
+              ) : (
+                <UserRound size={20} strokeWidth={1.6} aria-hidden />
+              )}
+              {canManageTeam ? 'Équipe' : 'Mon compte'}
             </Link>
             <form action={signOut} className="border-t border-divider">
               <button
