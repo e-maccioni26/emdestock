@@ -5,6 +5,7 @@ import { useActionState, useState, useTransition } from 'react';
 import { ChevronLeft, Info, Trash2 } from 'lucide-react';
 import { formatEuro, stockLabel, type PlaceholderShape } from '@emd/shared';
 import { Button } from '@/components/Button';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { Field } from '@/components/Field';
 import { ProductImage } from '@/components/ProductImage';
 import { StockBadge } from '@/components/Badge';
@@ -71,6 +72,7 @@ export function ProductForm({
   clients: { id: string; name: string }[];
   excluded: string[];
 }) {
+  const confirm = useConfirm();
   const [v, setV] = useState(initial);
   const [brands, setBrands] = useState(initialBrands);
   const [categories, setCategories] = useState(initialCategories);
@@ -108,9 +110,12 @@ export function ProductForm({
     const asChild =
       parent &&
       !parent.label.includes('›') &&
-      window.confirm(
-        `Créer « ${name} » dans « ${parent.label} » ?\n(Annuler : catégorie de premier niveau)`,
-      );
+      (await confirm({
+        title: `Créer « ${name} » dans « ${parent.label} » ?`,
+        message: 'Sinon, elle sera créée comme catégorie de premier niveau.',
+        confirmLabel: `Dans « ${parent.label} »`,
+        cancelLabel: 'Premier niveau',
+      }));
     const r = await createCategory(name, asChild ? parent!.id : null);
     if (r.error) return window.alert(r.error);
     setCategories((c) => [
@@ -146,8 +151,17 @@ export function ProductForm({
             variant="secondary"
             aria-label="Supprimer le produit"
             disabled={deleting}
-            onClick={() => {
-              if (!window.confirm('Supprimer définitivement ce produit ?')) return;
+            onClick={async () => {
+              if (
+                !(await confirm({
+                  title: 'Supprimer définitivement ce produit ?',
+                  message:
+                    'Un produit présent dans une commande ne peut pas être supprimé : masquez-le à la place.',
+                  confirmLabel: 'Supprimer',
+                  destructive: true,
+                }))
+              )
+                return;
               startDelete(async () => setDeleteError((await deleteProduct(id))?.error));
             }}
           >

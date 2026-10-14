@@ -3,22 +3,29 @@
 import { useState, useTransition } from 'react';
 import { orderStatusLabel, type OrderStatus } from '@emd/shared';
 import { StatusBadge } from '@/components/Badge';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { changeOrderStatus } from '../actions';
 
 const ORDER: OrderStatus[] = ['received', 'preparing', 'done', 'cancelled'];
 
 export function StatusPanel({ orderId, status }: { orderId: string; status: OrderStatus }) {
+  const confirm = useConfirm();
   const [error, setError] = useState<string>();
   const [pending, start] = useTransition();
   const final = status === 'cancelled';
 
-  function change(next: OrderStatus) {
+  async function change(next: OrderStatus) {
     if (next === status || final) return;
     if (
       next === 'cancelled' &&
-      !window.confirm(
-        'Annuler cette commande ? Le stock de chaque ligne sera remis en stock, et la commande ne pourra plus changer de statut.',
-      )
+      !(await confirm({
+        title: 'Annuler cette commande ?',
+        message:
+          'Le stock de chaque ligne sera remis en stock, et la commande ne pourra plus changer de statut.',
+        confirmLabel: 'Annuler la commande',
+        cancelLabel: 'Retour',
+        destructive: true,
+      }))
     )
       return;
     setError(undefined);

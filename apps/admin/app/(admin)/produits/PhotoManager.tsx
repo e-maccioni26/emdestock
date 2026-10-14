@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Plus, X } from 'lucide-react';
 import type { PlaceholderShape } from '@emd/shared';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { ProductImage } from '@/components/ProductImage';
 
 export interface Photo {
@@ -25,6 +26,7 @@ export function PhotoManager({
   title: string;
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const input = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
@@ -96,9 +98,12 @@ export function PhotoManager({
               type="button"
               aria-label={`Supprimer la photo ${i + 1}`}
               disabled={busy}
-              onClick={() =>
-                window.confirm('Supprimer cette photo ?') &&
-                call(() => fetch(`${api}/${p.id}`, { method: 'DELETE' }))
+              onClick={async () =>
+                (await confirm({
+                  title: 'Supprimer cette photo ?',
+                  confirmLabel: 'Supprimer',
+                  destructive: true,
+                })) && call(() => fetch(`${api}/${p.id}`, { method: 'DELETE' }))
               }
               className="absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full border border-border bg-white"
             >

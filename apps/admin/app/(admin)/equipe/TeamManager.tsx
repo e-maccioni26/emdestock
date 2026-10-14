@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { Plus } from 'lucide-react';
 import { validatePassword } from '@emd/shared';
 import { Button } from '@/components/Button';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { Field } from '@/components/Field';
 import { createMember, deleteMember, resetMemberPassword, setMemberDisabled } from './actions';
 
@@ -72,6 +73,7 @@ function Credentials({
 }
 
 function MemberRow({ m, isMe }: { m: Member; isMe: boolean }) {
+  const confirm = useConfirm();
   const [resetting, setResetting] = useState(false);
   const [password, setPassword] = useState('');
   const [shown, setShown] = useState<string>();
@@ -126,12 +128,16 @@ function MemberRow({ m, isMe }: { m: Member; isMe: boolean }) {
             type="button"
             className={link}
             disabled={pending}
-            onClick={() => {
+            onClick={async () => {
               if (
                 !disabled &&
-                !window.confirm(
-                  `Désactiver ${m.first_name} ${m.last_name} ? L’accès est coupé immédiatement.`,
-                )
+                !(await confirm({
+                  title: `Désactiver ${m.first_name} ${m.last_name} ?`,
+                  message:
+                    'L’accès est coupé immédiatement. Vous pourrez le réactiver à tout moment.',
+                  confirmLabel: 'Désactiver',
+                  destructive: true,
+                }))
               )
                 return;
               run(() => setMemberDisabled(m.id, !disabled));
@@ -143,11 +149,15 @@ function MemberRow({ m, isMe }: { m: Member; isMe: boolean }) {
             type="button"
             className={`${link} text-error`}
             disabled={pending}
-            onClick={() => {
+            onClick={async () => {
               if (
-                !window.confirm(
-                  `Supprimer le compte de ${m.first_name} ${m.last_name} ? Action irréversible.`,
-                )
+                !(await confirm({
+                  title: `Supprimer le compte de ${m.first_name} ${m.last_name} ?`,
+                  message:
+                    'Action irréversible. Pour couper l’accès sans tout perdre, préférez « Désactiver ».',
+                  confirmLabel: 'Supprimer',
+                  destructive: true,
+                }))
               )
                 return;
               run(() => deleteMember(m.id));

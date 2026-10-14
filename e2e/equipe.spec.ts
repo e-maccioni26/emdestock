@@ -3,6 +3,9 @@ import { expect, test, type Page } from '@playwright/test';
 const ADMIN = { email: 'admin@emd-destock.test', password: 'AdminDemo2026!' };
 const NEW = { first: 'Léa', last: 'Test', email: 'lea.test@emd-destock.test' };
 
+const confirmModal = (page: Page, label: string) =>
+  page.locator('dialog[open]').getByRole('button', { name: label, exact: true }).click();
+
 async function attempt(page: Page, email: string, password: string) {
   await page.goto('/connexion');
   await page.getByLabel('E-mail').fill(email);
@@ -80,9 +83,9 @@ test.describe.serial('équipe du back-office', () => {
     await loginOk(page, ADMIN.email, ADMIN.password);
     await page.goto('/equipe');
     const card = memberCard(page, NEW.email);
-    page.on('dialog', (d) => d.accept());
 
     await card.getByRole('button', { name: 'Désactiver' }).click();
+    await confirmModal(page, 'Désactiver');
     await expect(card).toContainText('Désactivé');
     // aucune action sur son propre compte
     await expect(memberCard(page, 'admin@emd-destock.test').getByRole('button')).toHaveCount(0);
@@ -106,6 +109,7 @@ test.describe.serial('équipe du back-office', () => {
     await loginOk(page, ADMIN.email, ADMIN.password);
     await page.goto('/equipe');
     await card.getByRole('button', { name: 'Supprimer' }).click();
+    await confirmModal(page, 'Supprimer');
     await expect(card).toHaveCount(0);
     await page.getByRole('button', { name: 'Se déconnecter' }).click();
     await attempt(page, NEW.email, password);

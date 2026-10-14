@@ -9,6 +9,9 @@ async function loginOk(page: Page) {
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 }
 
+const confirmModal = (page: Page, label: string) =>
+  page.locator('dialog[open]').getByRole('button', { name: label, exact: true }).click();
+
 async function login(page: Page, creds = ADMIN) {
   await page.goto('/connexion');
   await page.getByLabel('E-mail').fill(creds.email);
@@ -187,8 +190,8 @@ test.describe('produits', () => {
     await page.getByRole('button', { name: 'Enregistrer' }).click();
     await expect(page.getByText('Enregistré')).toBeVisible();
 
-    page.once('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Supprimer le produit' }).click();
+    await confirmModal(page, 'Supprimer');
     await expect(page).toHaveURL(/\/produits$/);
     await expect(page.getByText('Produit E2E modifié')).toHaveCount(0);
   });
@@ -224,9 +227,9 @@ test.describe('produits', () => {
   test('un produit commandé ne peut pas être supprimé', async ({ page }) => {
     await page.goto('/produits');
     await page.getByRole('row').filter({ hasText: 'ML-AN-100' }).locator('a').first().click();
-    page.once('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Supprimer le produit' }).click();
-    await expect(page.getByText(/figure dans une commande/)).toBeVisible();
+    await confirmModal(page, 'Supprimer');
+    await expect(page.getByText(/figure dans une commande/).last()).toBeVisible();
   });
 
   test('photos : ajout, déplacement, suppression', async ({ page }) => {
@@ -243,9 +246,11 @@ test.describe('produits', () => {
       await expect(page.getByRole('button', { name: `Supprimer la photo ${i + 1}` })).toBeVisible();
     }
     await page.getByRole('button', { name: 'Déplacer la photo 1 vers la droite' }).click();
-    page.on('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Supprimer la photo 2' }).click();
+    await confirmModal(page, 'Supprimer');
+    await expect(page.getByRole('button', { name: 'Supprimer la photo 2' })).toHaveCount(0);
     await page.getByRole('button', { name: 'Supprimer la photo 1' }).click();
+    await confirmModal(page, 'Supprimer');
     await expect(page.getByRole('button', { name: 'Supprimer la photo 1' })).toHaveCount(0);
   });
 });
@@ -268,8 +273,8 @@ test.describe('clients', () => {
     await page.goto('/clients?tab=actifs');
     await page.getByRole('row').filter({ hasText: 'Beauté Rivoli SARL' }).click();
 
-    page.on('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Suspendre l’accès' }).click();
+    await confirmModal(page, 'Suspendre');
     await expect(page.getByRole('button', { name: 'Réactiver l’accès' })).toBeVisible();
     await page.getByRole('button', { name: 'Réactiver l’accès' }).click();
     await expect(page.getByRole('button', { name: 'Suspendre l’accès' })).toBeVisible();
@@ -369,9 +374,28 @@ test.describe('encarts', () => {
     await page.getByRole('button', { name: 'Enregistrer' }).click();
     await expect(page.getByText('Enregistré')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Modifier l’encart Encart E2E' })).toBeVisible();
-    page.once('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Supprimer l’encart' }).click();
+    await confirmModal(page, 'Supprimer');
     await expect(page.getByRole('button', { name: 'Modifier l’encart Encart E2E' })).toHaveCount(0);
+  });
+
+  test('suppression : modale de confirmation, annulable', async ({ page }) => {
+    await page.goto('/encarts');
+    const first = page.getByRole('button', { name: /^Modifier l’encart / }).first();
+    await expect(first).toBeVisible();
+    const count = await page.getByRole('button', { name: /^Modifier l’encart / }).count();
+
+    await page.getByRole('button', { name: 'Supprimer l’encart' }).click();
+    const modal = page.getByRole('dialog', { name: 'Supprimer cet encart ?' });
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText('Action irréversible');
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+
+    await page.getByRole('button', { name: 'Supprimer l’encart' }).click();
+    await modal.getByRole('button', { name: 'Annuler' }).click();
+    await expect(modal).toBeHidden();
+    await expect(page.getByRole('button', { name: /^Modifier l’encart / })).toHaveCount(count);
   });
 
   test('destination sélection de plusieurs produits', async ({ page }) => {
@@ -391,8 +415,8 @@ test.describe('encarts', () => {
     await expect(page.getByRole('button', { name: /^Retirer / })).toHaveCount(2);
     await page.getByRole('button', { name: 'Enregistrer' }).click();
     await expect(page.getByText('Enregistré')).toBeVisible();
-    page.once('dialog', (d) => d.accept());
     await page.getByRole('button', { name: 'Supprimer l’encart' }).click();
+    await confirmModal(page, 'Supprimer');
     await expect(page.getByRole('button', { name: 'Modifier l’encart Sélection E2E' })).toHaveCount(
       0,
     );

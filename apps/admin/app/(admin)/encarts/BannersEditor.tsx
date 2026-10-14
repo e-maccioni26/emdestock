@@ -18,6 +18,7 @@ import {
   type PlaceholderShape,
 } from '@emd/shared';
 import { Button } from '@/components/Button';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { Field } from '@/components/Field';
 import { BannerPreview } from './BannerPreview';
 import { ProductPicker, type PickedProduct } from './ProductPicker';
@@ -110,6 +111,7 @@ export function BannersEditor({
   productTargets: PickedProduct[];
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [selected, setSelected] = useState<string | 'new'>(banners[0]?.id ?? 'new');
   const [draft, setDraft] = useState<BannerDraft>(banners[0] ? toDraft(banners[0]) : EMPTY);
   const [picked, setPicked] = useState<PickedProduct[]>(banners[0]?.products ?? []);
@@ -175,8 +177,17 @@ export function BannersEditor({
       router.refresh();
     });
   }
-  function remove() {
-    if (!draft.id || !window.confirm('Supprimer cet encart ?')) return;
+  async function remove() {
+    if (
+      !draft.id ||
+      !(await confirm({
+        title: 'Supprimer cet encart ?',
+        message: 'Il ne sera plus affiché dans l’app client. Action irréversible.',
+        confirmLabel: 'Supprimer',
+        destructive: true,
+      }))
+    )
+      return;
     start(async () => {
       const r = await deleteBanner(draft.id!);
       if (r.error) return setError(r.error);

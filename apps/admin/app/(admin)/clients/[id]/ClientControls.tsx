@@ -2,9 +2,11 @@
 
 import { useState, useTransition } from 'react';
 import { Button } from '@/components/Button';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { deleteClient, setFormerClient, setSuspended } from '../actions';
 
 export function SuspendButton({ companyId, suspended }: { companyId: string; suspended: boolean }) {
+  const confirm = useConfirm();
   const [error, setError] = useState<string>();
   const [pending, start] = useTransition();
   return (
@@ -17,12 +19,15 @@ export function SuspendButton({ companyId, suspended }: { companyId: string; sus
       <Button
         variant="secondary"
         disabled={pending}
-        onClick={() => {
+        onClick={async () => {
           if (
             !suspended &&
-            !window.confirm(
-              'Suspendre l’accès ? Le client perdra immédiatement l’accès au catalogue et aux commandes.',
-            )
+            !(await confirm({
+              title: 'Suspendre l’accès ?',
+              message: 'Le client perdra immédiatement l’accès au catalogue et aux commandes.',
+              confirmLabel: 'Suspendre',
+              destructive: true,
+            }))
           )
             return;
           setError(undefined);
@@ -36,6 +41,7 @@ export function SuspendButton({ companyId, suspended }: { companyId: string; sus
 }
 
 export function DeleteClientButton({ companyId }: { companyId: string }) {
+  const confirm = useConfirm();
   const [error, setError] = useState<string>();
   const [pending, start] = useTransition();
   return (
@@ -43,11 +49,15 @@ export function DeleteClientButton({ companyId }: { companyId: string }) {
       <button
         type="button"
         disabled={pending}
-        onClick={() => {
+        onClick={async () => {
           if (
-            !window.confirm(
-              'Supprimer le compte client ? L’accès et les données personnelles (contact, téléphone, e-mail) seront effacés. Les commandes restent conservées. Action irréversible.',
-            )
+            !(await confirm({
+              title: 'Supprimer le compte client ?',
+              message:
+                'L’accès et les données personnelles (contact, téléphone, e-mail) seront effacés. Les commandes restent conservées. Action irréversible.',
+              confirmLabel: 'Supprimer',
+              destructive: true,
+            }))
           )
             return;
           setError(undefined);

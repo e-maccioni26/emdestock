@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useConfirm } from '@/components/ConfirmDialog';
 import { changeOrderStatus } from '../actions';
 
 export function CancelButton({ orderId }: { orderId: string }) {
+  const confirm = useConfirm();
   const [error, setError] = useState<string>();
   const [pending, start] = useTransition();
   return (
@@ -11,11 +13,16 @@ export function CancelButton({ orderId }: { orderId: string }) {
       <button
         type="button"
         disabled={pending}
-        onClick={() => {
+        onClick={async () => {
           if (
-            !window.confirm(
-              'Annuler cette commande ? Le stock de chaque ligne sera remis en stock, et la commande ne pourra plus changer de statut.',
-            )
+            !(await confirm({
+              title: 'Annuler cette commande ?',
+              message:
+                'Le stock de chaque ligne sera remis en stock, et la commande ne pourra plus changer de statut.',
+              confirmLabel: 'Annuler la commande',
+              cancelLabel: 'Retour',
+              destructive: true,
+            }))
           )
             return;
           setError(undefined);
