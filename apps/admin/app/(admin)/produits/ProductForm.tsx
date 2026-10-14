@@ -5,7 +5,7 @@ import { useActionState, useState, useTransition } from 'react';
 import { ChevronLeft, Info, Trash2 } from 'lucide-react';
 import { formatEuro, stockLabel, type PlaceholderShape } from '@emd/shared';
 import { Button } from '@/components/Button';
-import { useConfirm } from '@/components/ConfirmDialog';
+import { useConfirm, usePrompt } from '@/components/ConfirmDialog';
 import { Field } from '@/components/Field';
 import { ProductImage } from '@/components/ProductImage';
 import { StockBadge } from '@/components/Badge';
@@ -73,6 +73,7 @@ export function ProductForm({
   excluded: string[];
 }) {
   const confirm = useConfirm();
+  const prompt = usePrompt();
   const [v, setV] = useState(initial);
   const [brands, setBrands] = useState(initialBrands);
   const [categories, setCategories] = useState(initialCategories);
@@ -81,7 +82,7 @@ export function ProductForm({
     {},
   );
   const [deleting, startDelete] = useTransition();
-  const [deleteError, setDeleteError] = useState<string>();
+  const [actionError, setActionError] = useState<string>();
   const e = state.errors ?? {};
   const set =
     <K extends keyof ProductValues>(k: K) =>
@@ -94,35 +95,47 @@ export function ProductForm({
   });
 
   async function addBrand() {
-    const name = window.prompt('Nom de la nouvelle marque');
-    if (!name) return;
-    const r = await createBrand(name);
-    if (r.error) return window.alert(r.error);
+    const made: { id?: string; name?: string } = {};
+    await prompt({
+      title: 'Nouvelle marque',
+      field: { label: 'Nom de la marque' },
+      confirmLabel: 'Créer',
+      submit: async (name) => {
+        const r = await createBrand(name);
+        if (r.error) return r.error;
+        Object.assign(made, r);
+      },
+    });
+    if (!made.id) return;
     setBrands((b) =>
-      [...b, { id: r.id!, name: r.name! }].sort((a, b) => a.name.localeCompare(b.name, 'fr')),
+      [...b, { id: made.id!, name: made.name! }].sort((a, b) => a.name.localeCompare(b.name, 'fr')),
     );
-    set('brand_id')(r.id!);
+    set('brand_id')(made.id);
   }
   async function addCategory() {
-    const name = window.prompt('Nom de la nouvelle catégorie');
-    if (!name) return;
     const parent = categories.find((c) => c.id === v.category_id);
-    const asChild =
-      parent &&
-      !parent.label.includes('›') &&
-      (await confirm({
-        title: `Créer « ${name} » dans « ${parent.label} » ?`,
-        message: 'Sinon, elle sera créée comme catégorie de premier niveau.',
-        confirmLabel: `Dans « ${parent.label} »`,
-        cancelLabel: 'Premier niveau',
-      }));
-    const r = await createCategory(name, asChild ? parent!.id : null);
-    if (r.error) return window.alert(r.error);
+    const canNest = !!parent && !parent.label.includes('›');
+    const made: { id?: string; label?: string; asChild?: boolean } = {};
+    await prompt({
+      title: 'Nouvelle catégorie',
+      field: { label: 'Nom de la catégorie' },
+      // une sous-catégorie n'a pas de sous-catégorie : la case n'existe que pour une catégorie de premier niveau
+      checkbox: canNest
+        ? { label: `Créer dans « ${parent.label} »`, defaultChecked: true }
+        : undefined,
+      confirmLabel: 'Créer',
+      submit: async (name, asChild) => {
+        const r = await createCategory(name, asChild ? parent!.id : null);
+        if (r.error) return r.error;
+        Object.assign(made, r, { asChild });
+      },
+    });
+    if (!made.id) return;
     setCategories((c) => [
       ...c,
-      { id: r.id!, label: asChild ? `${parent!.label} › ${r.label}` : r.label! },
+      { id: made.id!, label: made.asChild ? `${parent!.label} › ${made.label}` : made.label! },
     ]);
-    set('category_id')(r.id!);
+    set('category_id')(made.id);
   }
 
   const price = Number(v.price_ht.replace(',', '.'));
@@ -162,7 +175,7 @@ export function ProductForm({
                 }))
               )
                 return;
-              startDelete(async () => setDeleteError((await deleteProduct(id))?.error));
+              startDelete(async () => setActionError((await deleteProduct(id))?.error));
             }}
           >
             <Trash2 size={20} strokeWidth={1.6} aria-hidden />
@@ -181,9 +194,9 @@ export function ProductForm({
       </header>
 
       <div className="flex flex-col gap-4 px-5 pt-2 pb-6 md:px-8 md:pt-7 md:pb-8">
-        {(state.formError || deleteError) && (
+        {(state.formError || actionError) && (
           <p role="alert" className="text-[13px] text-error">
-            {state.formError ?? deleteError}
+            {state.formError ?? actionError}
           </p>
         )}
         <div className="grid items-start gap-4 md:gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">

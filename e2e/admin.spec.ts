@@ -216,12 +216,47 @@ test.describe('produits', () => {
     await expect(box).not.toBeChecked();
   });
 
-  test('création d’une marque depuis la fiche produit', async ({ page }) => {
+  test('création d’une marque depuis la fiche produit (modale)', async ({ page }) => {
     await page.goto('/produits/nouveau');
-    page.once('dialog', (d) => d.accept(`Marque E2E ${Date.now() % 100000}`));
-    await page.getByLabel('Marque', { exact: true }).selectOption('__new');
-    await expect(page.getByLabel('Marque', { exact: true })).not.toHaveValue('');
-    await expect(page.getByLabel('Marque', { exact: true })).not.toHaveValue('__new');
+    const brand = page.getByLabel('Marque', { exact: true });
+    await brand.selectOption('__new');
+    const modal = page.getByRole('dialog', { name: 'Nouvelle marque' });
+    await expect(modal.getByRole('button', { name: 'Créer' })).toBeDisabled();
+    // une marque existante est refusée sans fermer la fenêtre
+    await modal.getByLabel('Nom de la marque').fill('Maison Lior');
+    await modal.getByRole('button', { name: 'Créer' }).click();
+    await expect(modal.getByText('Cette marque existe déjà.')).toBeVisible();
+    await modal.getByLabel('Nom de la marque').fill(`Marque E2E ${Date.now() % 100000}`);
+    await modal.getByRole('button', { name: 'Créer' }).click();
+    await expect(modal).toBeHidden();
+    await expect(brand).not.toHaveValue('');
+    await expect(brand).not.toHaveValue('__new');
+    // annuler ne crée rien
+    await brand.selectOption('__new');
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+  });
+
+  test('création d’une catégorie, puis d’une sous-catégorie (modale)', async ({ page }) => {
+    await page.goto('/produits/nouveau');
+    const category = page.getByLabel('Catégorie', { exact: true });
+    const stamp = Date.now() % 100000;
+    await category.selectOption('__new');
+    const modal = page.getByRole('dialog', { name: 'Nouvelle catégorie' });
+    await expect(modal.getByRole('checkbox')).toHaveCount(0); // rien de sélectionné : premier niveau
+    await modal.getByLabel('Nom de la catégorie').fill(`Cat E2E ${stamp}`);
+    await modal.getByRole('button', { name: 'Créer' }).click();
+    await expect(modal).toBeHidden();
+    await expect(category.locator('option:checked')).toHaveText(`Cat E2E ${stamp}`);
+
+    await category.selectOption('__new');
+    await expect(
+      modal.getByRole('checkbox', { name: `Créer dans « Cat E2E ${stamp} »` }),
+    ).toBeChecked();
+    await modal.getByLabel('Nom de la catégorie').fill(`Sous ${stamp}`);
+    await modal.getByRole('button', { name: 'Créer' }).click();
+    await expect(modal).toBeHidden();
+    await expect(category.locator('option:checked')).toHaveText(`Cat E2E ${stamp} › Sous ${stamp}`);
   });
 
   test('un produit commandé ne peut pas être supprimé', async ({ page }) => {
